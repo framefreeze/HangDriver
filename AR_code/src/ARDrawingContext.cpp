@@ -19,7 +19,7 @@
 // #include <gl/glu.h>
 #include <gl.h>
 #include <glu.h>
-
+#include <cmath>
 void ARDrawingContextDrawCallback(void* param)
 {
     ARDrawingContext * ctx = static_cast<ARDrawingContext*>(param);
@@ -209,17 +209,16 @@ void ARDrawingContext::drawCoordinateAxis()//绘制坐标轴
   glEnd();
 }
 
-void ARDrawingContext::drawCubeModel()
-{
-  static const GLfloat LightAmbient[]=  { 0.25f, 0.25f, 0.25f, 1.0f };    // Ambient Light Values
-  static const GLfloat LightDiffuse[]=  { 0.1f, 0.1f, 0.1f, 1.0f };    // Diffuse Light Values
-  static const GLfloat LightPosition[]= { 0.0f, 0.0f, 2.0f, 1.0f };    // Light Position
-  
+void ARDrawingContext::drawCubeModel() {
+  static const GLfloat LightAmbient[] = {0.25f, 0.25f, 0.25f, 1.0f};    // Ambient Light Values
+  static const GLfloat LightDiffuse[] = {0.1f, 0.1f, 0.1f, 1.0f};    // Diffuse Light Values
+  static const GLfloat LightPosition[] = {0.0f, 0.0f, 2.0f, 1.0f};    // Light Position
+
   glPushAttrib(GL_COLOR_BUFFER_BIT | GL_CURRENT_BIT | GL_ENABLE_BIT | GL_LIGHTING_BIT | GL_POLYGON_BIT);
 
-  glColor4f(0.2f,0.2f,1.0f,0.90f);         // Full Brightness, 50% Alpha ( NEW )背景颜色
-  glBlendFunc(GL_ONE,GL_ONE_MINUS_SRC_ALPHA);       // Blending Function For Translucency Based On Source Alpha 
-  glEnable(GL_BLEND); 
+  glColor4f(0.4f, 0.8f, 1.0f, 0.5f);         // Full Brightness, 50% Alpha ( NEW )背景颜色
+  glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);       // Blending Function For Translucency Based On Source Alpha
+  glEnable(GL_BLEND);
 
   glShadeModel(GL_SMOOTH);
 
@@ -231,21 +230,22 @@ void ARDrawingContext::drawCubeModel()
   glLightfv(GL_LIGHT1, GL_POSITION, LightPosition);
   glEnable(GL_COLOR_MATERIAL);
 
-  glScalef(0.25,0.25, 0.25);
-  glTranslatef(0,0, 1);
+  glScalef(0.25, 0.25, 0.25);
+  glTranslatef(0, 0, 1);
 
   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);//画面
   //glBegin(GL_QUADS);
-  glBegin(GL_POLYGON);
-  /**箭头**/
-  glNormal3f(0.0f,0.0f,1.0f);
-  glVertex3f(-1.0f,0.0f,-2.0f);
-  glVertex3f(-3.0f,0.0f,-2.0f);
-  glVertex3f(0.0f,3.0f,-2.0f);
-  glVertex3f(3.0f,0.0f,-2.0f);
-  glVertex3f(1.0f,0.0f,-2.0f);
-  glVertex3f(1.0f,-4.0f,-2.0f);
-  glVertex3f(-1.0f,-4.0f,-2.0f);
+
+  /**一般箭头**/
+//  glBegin(GL_POLYGON);
+//  glNormal3f(0.0f,0.0f,1.0f);
+//  glVertex3f(-1.0f,0.0f,-2.0f);
+//  glVertex3f(-3.0f,0.0f,-2.0f);
+//  glVertex3f(0.0f,3.0f,-2.0f);
+//  glVertex3f(3.0f,0.0f,-2.0f);
+//  glVertex3f(1.0f,0.0f,-2.0f);
+//  glVertex3f(1.0f,-4.0f,-2.0f);
+//  glVertex3f(-1.0f,-4.0f,-2.0f);
   // Front Face
 //  glNormal3f( 0.0f, 0.0f, 1.0f);    // Normal Pointing Towards Viewer
 //  glVertex3f(-1.0f, -1.0f,  1.0f);  // Point 1 (Front)
@@ -282,8 +282,26 @@ void ARDrawingContext::drawCubeModel()
 //  glVertex3f(-1.0f, -1.0f,  1.0f);  // Point 2 (Left)
 //  glVertex3f(-1.0f,  1.0f,  1.0f);  // Point 3 (Left)
 //  glVertex3f(-1.0f,  1.0f, -1.0f);  // Point 4 (Left)
-  glEnd();
-  
+  /*改进箭头*/
+  float ax[10]={1,1,1.1,1.11,1.12,1.14,1.2,1.4,1.7,2};
+  float ay[10]={1,2,3,4,5,6,7,8,9,10};
+  float bx[10]={-1,-1,-0.9,-0.89,-0.88,-0.86,-0.8,-0.6,-0.3,0};
+  float by[10]={1,2,3,4.5,6,7.5,9.5,11,13,16};
+  for(int i=0;i<10;i++){
+    drawArrow(ax[i],ay[i],bx[i],by[i]);
+  }
+//  for (int i = 0; i < 10; i++) {
+//    glBegin(GL_POLYGON);
+//    glVertex3f(0.0f, 0.5f + 1.5 * i, 0.0f);
+//    glNormal3f(0.0f, 1.0f, 0.0f);//放在第一个下面有奇效
+//    glVertex3f(-0.5f, 0.0f + 1.5 * i, 0.0f);
+//    glVertex3f(-1.0f, 0.0f + 1.5 * i, 0.0f);
+//    glVertex3f(0.0f, 1.0f + 1.5 * i, 0.0f);
+//    glVertex3f(1.0f, 0.0f + 1.5 * i, 0.0f);
+//    glVertex3f(0.5f, 0.0f + 1.5 * i, 0.0f);
+//    glEnd();
+//  }
+
 //  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);//画线
 //  glColor4f(0.0f,0.65f,0.3f,0.0f); // Full Brightness, 50% Alpha ( NEW )-- (0.2f,0.65f,0.3f,0.35f)隐藏线
 //  glBegin(GL_QUADS);
@@ -324,6 +342,28 @@ void ARDrawingContext::drawCubeModel()
 //  glVertex3f(-1.0f,  1.0f,  1.0f);  // Point 3 (Left)
 //  glVertex3f(-1.0f,  1.0f, -1.0f);  // Point 4 (Left)
 //  glEnd();
- 
+
   glPopAttrib();
+}
+void ARDrawingContext::drawArrow(float ax,float ay,float bx,float by){
+  glBegin(GL_POLYGON);
+  float mx = (ax+bx)/2;
+  float my=(ay+by)/2;
+  float ky=sqrt((ax-bx)*(ax-bx)/((ax-bx)*(ax-bx)+(ay-by)*(ay-by)));
+  float kx=sqrt((ay-by)*(ay-by)/((ax-bx)*(ax-bx)+(ay-by)*(ay-by)));
+  printf("mx: %f\nmy: %f\n:ky: %f\nkx: %f",mx,my,ky,kx);
+//  glNormal3f(0.0f,1.0f,0.0f);
+  glVertex3f(mx+0.5f*kx,my+0.5f*ky, 0.0f);
+  glNormal3f(0.0f, 1.0f, 0.0f);//放在第一个下面有奇效
+  glVertex3f(mx-0.5f*ky,my+0.5f*kx, 0.0f);
+  glVertex3f(mx-1.0f*ky,my+1.0f*kx, 0.0f);
+  glVertex3f(mx+1.0f*kx,my+1.0f*ky, 0.0f);
+  glVertex3f(mx+1.0f*ky,my-1.0f*kx, 0.0f);
+  glVertex3f(mx+0.5f*ky,my-0.5f*kx, 0.0f);
+//    glVertex3f(-0.5f, 0.0f, 0.0f);
+//    glVertex3f(-1.0f, 0.0f, 0.0f);
+//    glVertex3f(0.0f, 1.0f, 0.0f);
+//    glVertex3f(1.0f, 0.0f, 0.0f);
+//    glVertex3f(0.5f, 0.0f, 0.0f);
+  glEnd();
 }
