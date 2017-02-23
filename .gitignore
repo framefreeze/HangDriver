@@ -89,3 +89,6 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+## CLion
+.idea
