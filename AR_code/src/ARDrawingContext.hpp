@@ -59,6 +59,9 @@ private:
   //! Draw the cube model
   void drawCubeModel();
 
+    //! Draw the Arrow
+    void drawArrow(float,float,float,float);
+
 private:
   bool               m_isTextureInitialized;
   unsigned int       m_backgroundTextureId;
