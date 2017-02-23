@@ -194,17 +194,17 @@ void ARDrawingContext::drawCoordinateAxis()//绘制坐标轴
 
   glBegin(GL_LINES);
 
-  glColor3f(1.0f, 0.0f, 0.0f);
-  glVertex3fv(lineX);
-  glVertex3fv(lineX + 3);
-
-  glColor3f(0.0f, 1.0f, 0.0f);
-  glVertex3fv(lineY);
-  glVertex3fv(lineY + 3);
-
-  glColor3f(0.0f, 0.0f, 1.0f);//
-  glVertex3fv(lineZ);
-  glVertex3fv(lineZ + 3);
+//  glColor3f(1.0f, 0.0f, 0.0f);
+//  glVertex3fv(lineX);
+//  glVertex3fv(lineX + 3);
+//
+//  glColor3f(0.0f, 1.0f, 0.0f);
+//  glVertex3fv(lineY);
+//  glVertex3fv(lineY + 3);
+//
+//  glColor3f(0.0f, 0.0f, 1.0f);//
+//  glVertex3fv(lineZ);
+//  glVertex3fv(lineZ + 3);
 
   glEnd();
 }
@@ -234,86 +234,96 @@ void ARDrawingContext::drawCubeModel()
   glScalef(0.25,0.25, 0.25);
   glTranslatef(0,0, 1);
 
-  glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-  glBegin(GL_QUADS); 
+  glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);//画面
+  //glBegin(GL_QUADS);
+  glBegin(GL_POLYGON);
+  /**箭头**/
+  glNormal3f(0.0f,0.0f,1.0f);
+  glVertex3f(-1.0f,0.0f,-2.0f);
+  glVertex3f(-3.0f,0.0f,-2.0f);
+  glVertex3f(0.0f,3.0f,-2.0f);
+  glVertex3f(3.0f,0.0f,-2.0f);
+  glVertex3f(1.0f,0.0f,-2.0f);
+  glVertex3f(1.0f,-4.0f,-2.0f);
+  glVertex3f(-1.0f,-4.0f,-2.0f);
   // Front Face
-  glNormal3f( 0.0f, 0.0f, 1.0f);    // Normal Pointing Towards Viewer
-  glVertex3f(-1.0f, -1.0f,  1.0f);  // Point 1 (Front)
-  glVertex3f( 1.0f, -1.0f,  1.0f);  // Point 2 (Front)
-  glVertex3f( 1.0f,  1.0f,  1.0f);  // Point 3 (Front)
-  glVertex3f(-1.0f,  1.0f,  1.0f);  // Point 4 (Front)
-  // Back Face
-  glNormal3f( 0.0f, 0.0f,-1.0f);    // Normal Pointing Away From Viewer
-  glVertex3f(-1.0f, -1.0f, -1.0f);  // Point 1 (Back)
-  glVertex3f(-1.0f,  1.0f, -1.0f);  // Point 2 (Back)
-  glVertex3f( 1.0f,  1.0f, -1.0f);  // Point 3 (Back)
-  glVertex3f( 1.0f, -1.0f, -1.0f);  // Point 4 (Back)
+//  glNormal3f( 0.0f, 0.0f, 1.0f);    // Normal Pointing Towards Viewer
+//  glVertex3f(-1.0f, -1.0f,  1.0f);  // Point 1 (Front)
+//  glVertex3f( 1.0f, -1.0f,  1.0f);  // Point 2 (Front)
+//  glVertex3f( 1.0f,  1.0f,  1.0f);  // Point 3 (Front)
+//  glVertex3f(-1.0f,  1.0f,  1.0f);  // Point 4 (Front)
+  // Back Face贴近于平面的面
+//  glNormal3f( 0.0f, 0.0f,-1.0f);    // Normal Pointing Away From Viewer
+//  glVertex3f(-1.0f, -1.0f, -1.0f);  // Point 1 (Back)
+//  glVertex3f(-1.0f,  1.0f, -1.0f);  // Point 2 (Back)
+//  glVertex3f( 1.0f,  1.0f, -1.0f);  // Point 3 (Back)
+//  glVertex3f( 1.0f, -1.0f, -1.0f);  // Point 4 (Back)
   // Top Face
-  glNormal3f( 0.0f, 1.0f, 0.0f);    // Normal Pointing Up
-  glVertex3f(-1.0f,  1.0f, -1.0f);  // Point 1 (Top)
-  glVertex3f(-1.0f,  1.0f,  1.0f);  // Point 2 (Top)
-  glVertex3f( 1.0f,  1.0f,  1.0f);  // Point 3 (Top)
-  glVertex3f( 1.0f,  1.0f, -1.0f);  // Point 4 (Top)
+//  glNormal3f( 0.0f, 1.0f, 0.0f);    // Normal Pointing Up
+//  glVertex3f(-1.0f,  1.0f, -1.0f);  // Point 1 (Top)
+//  glVertex3f(-1.0f,  1.0f,  1.0f);  // Point 2 (Top)
+//  glVertex3f( 1.0f,  1.0f,  1.0f);  // Point 3 (Top)
+//  glVertex3f( 1.0f,  1.0f, -1.0f);  // Point 4 (Top)
   // Bottom Face
-  glNormal3f( 0.0f,-1.0f, 0.0f);    // Normal Pointing Down
-  glVertex3f(-1.0f, -1.0f, -1.0f);  // Point 1 (Bottom)
-  glVertex3f( 1.0f, -1.0f, -1.0f);  // Point 2 (Bottom)
-  glVertex3f( 1.0f, -1.0f,  1.0f);  // Point 3 (Bottom)
-  glVertex3f(-1.0f, -1.0f,  1.0f);  // Point 4 (Bottom)
+//  glNormal3f( 0.0f,-1.0f, 0.0f);    // Normal Pointing Down
+//  glVertex3f(-1.0f, -1.0f, -1.0f);  // Point 1 (Bottom)
+//  glVertex3f( 1.0f, -1.0f, -1.0f);  // Point 2 (Bottom)
+//  glVertex3f( 1.0f, -1.0f,  1.0f);  // Point 3 (Bottom)
+//  glVertex3f(-1.0f, -1.0f,  1.0f);  // Point 4 (Bottom)
   // Right face
-  glNormal3f( 1.0f, 0.0f, 0.0f);    // Normal Pointing Right
-  glVertex3f( 1.0f, -1.0f, -1.0f);  // Point 1 (Right)
-  glVertex3f( 1.0f,  1.0f, -1.0f);  // Point 2 (Right)
-  glVertex3f( 1.0f,  1.0f,  1.0f);  // Point 3 (Right)
-  glVertex3f( 1.0f, -1.0f,  1.0f);  // Point 4 (Right)
+//  glNormal3f( 1.0f, 0.0f, 0.0f);    // Normal Pointing Right
+//  glVertex3f( 1.0f, -1.0f, -1.0f);  // Point 1 (Right)
+//  glVertex3f( 1.0f,  1.0f, -1.0f);  // Point 2 (Right)
+//  glVertex3f( 1.0f,  1.0f,  1.0f);  // Point 3 (Right)
+//  glVertex3f( 1.0f, -1.0f,  1.0f);  // Point 4 (Right)
   // Left Face
-  glNormal3f(-1.0f, 0.0f, 0.0f);    // Normal Pointing Left
-  glVertex3f(-1.0f, -1.0f, -1.0f);  // Point 1 (Left)
-  glVertex3f(-1.0f, -1.0f,  1.0f);  // Point 2 (Left)
-  glVertex3f(-1.0f,  1.0f,  1.0f);  // Point 3 (Left)
-  glVertex3f(-1.0f,  1.0f, -1.0f);  // Point 4 (Left)
+//  glNormal3f(-1.0f, 0.0f, 0.0f);    // Normal Pointing Left
+//  glVertex3f(-1.0f, -1.0f, -1.0f);  // Point 1 (Left)
+//  glVertex3f(-1.0f, -1.0f,  1.0f);  // Point 2 (Left)
+//  glVertex3f(-1.0f,  1.0f,  1.0f);  // Point 3 (Left)
+//  glVertex3f(-1.0f,  1.0f, -1.0f);  // Point 4 (Left)
   glEnd();
   
-  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-  glColor4f(0.2f,0.65f,0.3f,0.35f); // Full Brightness, 50% Alpha ( NEW )
-  glBegin(GL_QUADS); 
-  // Front Face
-  glNormal3f( 0.0f, 0.0f, 1.0f);    // Normal Pointing Towards Viewer
-  glVertex3f(-1.0f, -1.0f,  1.0f);  // Point 1 (Front)
-  glVertex3f( 1.0f, -1.0f,  1.0f);  // Point 2 (Front)
-  glVertex3f( 1.0f,  1.0f,  1.0f);  // Point 3 (Front)
-  glVertex3f(-1.0f,  1.0f,  1.0f);  // Point 4 (Front)
-  // Back Face
-  glNormal3f( 0.0f, 0.0f,-1.0f);    // Normal Pointing Away From Viewer
-  glVertex3f(-1.0f, -1.0f, -1.0f);  // Point 1 (Back)
-  glVertex3f(-1.0f,  1.0f, -1.0f);  // Point 2 (Back)
-  glVertex3f( 1.0f,  1.0f, -1.0f);  // Point 3 (Back)
-  glVertex3f( 1.0f, -1.0f, -1.0f);  // Point 4 (Back)
-  // Top Face
-  glNormal3f( 0.0f, 1.0f, 0.0f);    // Normal Pointing Up
-  glVertex3f(-1.0f,  1.0f, -1.0f);  // Point 1 (Top)
-  glVertex3f(-1.0f,  1.0f,  1.0f);  // Point 2 (Top)
-  glVertex3f( 1.0f,  1.0f,  1.0f);  // Point 3 (Top)
-  glVertex3f( 1.0f,  1.0f, -1.0f);  // Point 4 (Top)
-  // Bottom Face
-  glNormal3f( 0.0f,-1.0f, 0.0f);    // Normal Pointing Down
-  glVertex3f(-1.0f, -1.0f, -1.0f);  // Point 1 (Bottom)
-  glVertex3f( 1.0f, -1.0f, -1.0f);  // Point 2 (Bottom)
-  glVertex3f( 1.0f, -1.0f,  1.0f);  // Point 3 (Bottom)
-  glVertex3f(-1.0f, -1.0f,  1.0f);  // Point 4 (Bottom)
-  // Right face
-  glNormal3f( 1.0f, 0.0f, 0.0f);    // Normal Pointing Right
-  glVertex3f( 1.0f, -1.0f, -1.0f);  // Point 1 (Right)
-  glVertex3f( 1.0f,  1.0f, -1.0f);  // Point 2 (Right)
-  glVertex3f( 1.0f,  1.0f,  1.0f);  // Point 3 (Right)
-  glVertex3f( 1.0f, -1.0f,  1.0f);  // Point 4 (Right)
-  // Left Face
-  glNormal3f(-1.0f, 0.0f, 0.0f);    // Normal Pointing Left
-  glVertex3f(-1.0f, -1.0f, -1.0f);  // Point 1 (Left)
-  glVertex3f(-1.0f, -1.0f,  1.0f);  // Point 2 (Left)
-  glVertex3f(-1.0f,  1.0f,  1.0f);  // Point 3 (Left)
-  glVertex3f(-1.0f,  1.0f, -1.0f);  // Point 4 (Left)
-  glEnd();
+//  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);//画线
+//  glColor4f(0.0f,0.65f,0.3f,0.0f); // Full Brightness, 50% Alpha ( NEW )-- (0.2f,0.65f,0.3f,0.35f)隐藏线
+//  glBegin(GL_QUADS);
+//  // Front Face
+//  glNormal3f( 0.0f, 0.0f, 1.0f);    // Normal Pointing Towards Viewer
+//  glVertex3f(-1.0f, -1.0f,  1.0f);  // Point 1 (Front)
+//  glVertex3f( 1.0f, -1.0f,  1.0f);  // Point 2 (Front)
+//  glVertex3f( 1.0f,  1.0f,  1.0f);  // Point 3 (Front)
+//  glVertex3f(-1.0f,  1.0f,  1.0f);  // Point 4 (Front)
+//  // Back Face
+//  glNormal3f( 0.0f, 0.0f,-1.0f);    // Normal Pointing Away From Viewer
+//  glVertex3f(-1.0f, -1.0f, -1.0f);  // Point 1 (Back)
+//  glVertex3f(-1.0f,  1.0f, -1.0f);  // Point 2 (Back)
+//  glVertex3f( 1.0f,  1.0f, -1.0f);  // Point 3 (Back)
+//  glVertex3f( 1.0f, -1.0f, -1.0f);  // Point 4 (Back)
+//  // Top Face
+//  glNormal3f( 0.0f, 1.0f, 0.0f);    // Normal Pointing Up
+//  glVertex3f(-1.0f,  1.0f, -1.0f);  // Point 1 (Top)
+//  glVertex3f(-1.0f,  1.0f,  1.0f);  // Point 2 (Top)
+//  glVertex3f( 1.0f,  1.0f,  1.0f);  // Point 3 (Top)
+//  glVertex3f( 1.0f,  1.0f, -1.0f);  // Point 4 (Top)
+//  // Bottom Face
+//  glNormal3f( 0.0f,-1.0f, 0.0f);    // Normal Pointing Down
+//  glVertex3f(-1.0f, -1.0f, -1.0f);  // Point 1 (Bottom)
+//  glVertex3f( 1.0f, -1.0f, -1.0f);  // Point 2 (Bottom)
+//  glVertex3f( 1.0f, -1.0f,  1.0f);  // Point 3 (Bottom)
+//  glVertex3f(-1.0f, -1.0f,  1.0f);  // Point 4 (Bottom)
+//  // Right face
+//  glNormal3f( 1.0f, 0.0f, 0.0f);    // Normal Pointing Right
+//  glVertex3f( 1.0f, -1.0f, -1.0f);  // Point 1 (Right)
+//  glVertex3f( 1.0f,  1.0f, -1.0f);  // Point 2 (Right)
+//  glVertex3f( 1.0f,  1.0f,  1.0f);  // Point 3 (Right)
+//  glVertex3f( 1.0f, -1.0f,  1.0f);  // Point 4 (Right)
+//  // Left Face
+//  glNormal3f(-1.0f, 0.0f, 0.0f);    // Normal Pointing Left
+//  glVertex3f(-1.0f, -1.0f, -1.0f);  // Point 1 (Left)
+//  glVertex3f(-1.0f, -1.0f,  1.0f);  // Point 2 (Left)
+//  glVertex3f(-1.0f,  1.0f,  1.0f);  // Point 3 (Left)
+//  glVertex3f(-1.0f,  1.0f, -1.0f);  // Point 4 (Left)
+//  glEnd();
  
   glPopAttrib();
 }
