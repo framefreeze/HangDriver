@@ -1,5 +1,6 @@
 debug
 release
+data
 *.zip
 
 ## C++
@@ -89,5 +90,6 @@ Module.symvers
 Mkfile.old
 dkms.conf
 
-# Clion
+
+## CLion
 .idea
