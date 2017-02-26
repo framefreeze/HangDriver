@@ -7,7 +7,7 @@ project(opencv_example_project)
 # Find OpenCV, you may need to set OpenCV_DIR variable
 # to the absolute path to the directory containing OpenCVConfig.cmake file
 # via the command line or GUI
-find_package(OpenCV REQUIRED)
+find_package(OpenCV 3.2.0 REQUIRED)
 
 # If the package has been found, several variables will
 # be set, you can find the full list with descriptions
