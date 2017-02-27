@@ -9,7 +9,7 @@ using namespace std;
 
 int next_Node[50][50]={0};
 
-ifstream fin("/Users/yujifan/Desktop/next node info.txt");
+ifstream fin("/Users/yujifan/Desktop/next_node_info.txt");
 
 void init()
 {
