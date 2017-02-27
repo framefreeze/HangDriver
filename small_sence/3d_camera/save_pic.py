@@ -6,10 +6,10 @@ while cap.isOpened() :
     rst,frame = cap.read()
     cv2.imshow('pic_now',frame)
     key = cv2.waitKey()
-    # print('s')
+    print(key)
     if key == 27 : # ESC
         break
-    elif key == 115 :
+    elif chr(key) == 's' :
         filename = 'data/pic'+'{}'.format(count)+'.jpg'
         count += 1
         # print(filename)

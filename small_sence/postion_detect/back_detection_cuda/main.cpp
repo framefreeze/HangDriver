@@ -91,6 +91,7 @@ int main() {
             break;
         }
         detection_cuda(frame, center, radius);
+        /*
         Rect roi_rect(int(center.x-radius), int(center.y-radius), int(radius*2), int(radius*2));
         //cout << roi_rect << endl;
         if(radius != 0) {
@@ -104,9 +105,10 @@ int main() {
             //cout << Roi << endl;
             imshow("roi", Roi);
         }
+        */
         imshow("frame", frame);
 
-        if(waitKey() == 27) {
+        if(waitKey(1) == 27) {
             break;
         }
 
