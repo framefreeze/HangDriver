@@ -44,7 +44,8 @@ def hough_lines(img, rho, theta, threshold, min_line_len, max_line_gap):
   draw_lanes(line_img, lines)
   return line_img
 
-def draw_lanes(img, lines, color=[255, 0, 0], thickness=8):
+def draw_lanes(img, lines, color=[255, 0, 0], thickness=20):
+  y2 = int(img.shape[0]*0.607)
   left_lines, right_lines = [], []
   for line in lines:
     for x1, y1, x2, y2 in line:
@@ -64,8 +65,8 @@ def draw_lanes(img, lines, color=[255, 0, 0], thickness=8):
   right_points = [(x1, y1) for line in right_lines for x1,y1,x2,y2 in line]
   right_points = right_points + [(x2, y2) for line in right_lines for x1,y1,x2,y2 in line]
   
-  left_vtx = calc_lane_vertices(left_points, 325, img.shape[0])
-  right_vtx = calc_lane_vertices(right_points, 325, img.shape[0])
+  left_vtx = calc_lane_vertices(left_points, y2, img.shape[0])
+  right_vtx = calc_lane_vertices(right_points, y2, img.shape[0])
   
   cv2.line(img, left_vtx[0], left_vtx[1], color, thickness)
   cv2.line(img, right_vtx[0], right_vtx[1], color, thickness)
@@ -95,14 +96,52 @@ def calc_lane_vertices(point_list, ymin, ymax):
   return [(xmin, ymin), (xmax, ymax)]
 
 def process_an_image(img):
-  roi_vtx = np.array([[(480, img.shape[0]), (700, 540), (740, 540), (img.shape[1], img.shape[0])]])
-
+  img = cv2.resize(img, (1440,900))
+  # x1 = int(img.shape[1]*0.117)
+  # x2 = int(img.shape[1]*0.3)
+  # x3 = int(img.shape[1]*0.599)
+  # x4 = int(img.shape[1]*0.8910)
+  # y1 = int(img.shape[0]*0.607)
+  # y2 = int(img.shape[0]*0.933)
+  # roi_vtx = np.array([[(x1, y2), (x2, y1), (x3, y1), (x4, y2)]])
+  # left below
+  x1 = int(img.shape[1]*0)
+  x2 = int(img.shape[1]*844/2560)
+  x3 = int(img.shape[1]*1605/2560)
+  x4 = int(img.shape[1])
+  y1 = int(img.shape[0]*829/1440)
+  y2 = int(img.shape[0])
+  roi_vtx = np.array([[(x1, y2), (x2, y1), (x3, y1), (x4, y2)]])
+  # right below
+  # x1 = int(img.shape[1]*41/2560)
+  # x2 = int(img.shape[1]*623/2560)
+  # x3 = int(img.shape[1]*1324/2560)
+  # x4 = int(img.shape[1]*1810)
+  # y1 = int(img.shape[0]*786/1440)
+  # y2 = int(img.shape[0]*1061/1440)
+  # y3 = int(img.shape[0]*1338/1440)
+  # roi_vtx = np.array([[(x1, y2), (x2, y1), (x3, y1), (x4, y3)]])
+  # print x1
+  # print x2
+  # print x3
+  # print x4
+  # print y1
+  # print y2
   gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
   blur_gray = cv2.GaussianBlur(gray, (blur_ksize, blur_ksize), 0, 0)
   edges = cv2.Canny(blur_gray, canny_lthreshold, canny_hthreshold)
   roi_edges = roi_mask(edges, roi_vtx)
   line_img = hough_lines(roi_edges, rho, theta, threshold, min_line_length, max_line_gap)
   res_img = cv2.addWeighted(img, 0.8, line_img, 1, 0)
+  if type(res_img)!=None :
+    cv2.imshow('1',res_img)
+  if type(blur_gray)!=None :
+    cv2.imshow('2',blur_gray)
+  if type(roi_edges)!=None :
+    cv2.imshow('3',roi_edges)
+  if type(line_img)!=None :
+    cv2.imshow('4',line_img)
+  cv2.waitKey()
 
   '''
   plt.figure()
@@ -134,8 +173,9 @@ def process_an_image(img):
 # img = mplimg.imread("lane.jpg") 
 # process_an_image(img)
 
-output = 'video_4_sol.mp4'
+output = 'video_12_sol.mp4'
 # clip = VideoFileClip("/Users/yujifan/Downloads/video_2.mp4")
-clip = VideoFileClip("/Users/yujifan/Downloads/data/IMG_0906.MOV")
+# clip = VideoFileClip("/Users/yujifan/Downloads/11612191-1-hd.mp4")
+clip = VideoFileClip("/Users/yujifan/Downloads/data/videoleft.mp4")
 out_clip = clip.fl_image(process_an_image)
 out_clip.write_videofile(output, audio=False)
