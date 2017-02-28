@@ -56,7 +56,7 @@ static int print_help()
 
 
 static void
-StereoCalib(const vector<string>& imagelist, Size boardSize, float squareSize, bool displayCorners = false, bool useCalibrated=true, bool showRectified=true)
+StereoCalib(const vector<string>& imagelist, Size boardSize, float squareSize, bool displayCorners = true, bool useCalibrated=true, bool showRectified=true)
 {
     if( imagelist.size() % 2 != 0 )
     {
@@ -122,7 +122,7 @@ StereoCalib(const vector<string>& imagelist, Size boardSize, float squareSize, b
                 double sf = 640./MAX(img.rows, img.cols);
                 resize(cimg, cimg1, Size(), sf, sf);
                 imshow("corners", cimg1);
-                char c = (char)waitKey(500);
+                char c = (char)waitKey();
                 if( c == 27 || c == 'q' || c == 'Q' ) //Allow ESC to quit
                     exit(-1);
             }
@@ -368,6 +368,6 @@ int main(int argc, char** argv)
         return print_help();
     }
 
-    StereoCalib(imagelist, boardSize, squareSize, false, true, showRectified);
+    StereoCalib(imagelist, boardSize, squareSize, true, true, showRectified);
     return 0;
 }
