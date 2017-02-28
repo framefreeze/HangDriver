@@ -1,0 +1,3 @@
+/Users/yujifan/CLionProjects/output_route_with_direction/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/yujifan/CLionProjects/output_route_with_direction/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/Users/yujifan/CLionProjects/output_route_with_direction/cmake-build-debug/CMakeFiles/output_route_with_direction.dir
