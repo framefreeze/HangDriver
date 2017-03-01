@@ -2,6 +2,7 @@
 
 #include <opencv2/opencv.hpp>
 #include <opencv2/cudalegacy.hpp>
+#include "output_road.cpp"
 //#include "opencv2/cudabgsegm.hpp"
 //#include <cuda_runtime.h>
 
@@ -12,7 +13,21 @@ Ptr<BackgroundSubtractor> mog_cuda = cuda::createBackgroundSubtractorMOG2();
 Ptr<BackgroundSubtractor> mog = createBackgroundSubtractorMOG2();
 Mat frame;
 
-
+Rect locate[41] = {Rect(61, 0, 64, 93), Rect(125, 0, 62, 93), Rect(61, 93, 64, 118),
+                   Rect(125, 93, 62, 118), Rect(61,211,64,91), Rect(125,211,62,91),
+                   Rect(61,301,64,94), Rect(125,301,62,94), Rect(61,395,64,120),
+                   Rect(125,395,62,120), Rect(61,516,64,54), Rect(125,516,62,54),
+                   Rect(188,395,92,60), Rect(188,455,92,61), Rect(280,395,90,60),
+                   Rect(280,455,90,61), Rect(370,0,63,93), Rect(432,0,63,93),
+                   Rect(370,93,126,118), Rect(370,211,63,91), Rect(432,211,63,91),
+                   Rect(370,301,63,94), Rect(432,301,63,94), Rect(370,395,63,60),
+                   Rect(370,455,63,61), Rect(432, 395,63,120), Rect(495, 93,52,61),
+                   Rect(495,154,52,57), Rect(188,93,92,61), Rect(280,93,90,61),
+                   Rect(188,154,92,57), Rect(280, 154,90,57), Rect(0,0,60,93),
+                   Rect(0,93,60,118), Rect(0,211,60,91), Rect(0,301,60,94),
+                   Rect(0,395,60,120), Rect(0,516,60,54), Rect(0,0,0,0),
+                   Rect(203,260,135,120)}; 
+                   
 Point2f detection(Mat& frame, Point2f& center, float& radius ){
     center = Point2f(0,0);
     radius = 0;
@@ -43,7 +58,8 @@ Point2f detection(Mat& frame, Point2f& center, float& radius ){
 }
 
 void detection_cuda(Mat& frame, Point2f& center, float& radius ){
-    center = Point2f(0,0);
+
+    center = Point2f(-1,-1);
     radius = 0;
     Mat fgmask;
     vector<vector<Point> > contours;
@@ -51,7 +67,7 @@ void detection_cuda(Mat& frame, Point2f& center, float& radius ){
     cuda::GpuMat cuda_frame, cuda_fgmask;
 //    blur(frame, frame, Size(5,5), Point(-1, -1));
     cuda_frame.upload(frame);
-
+    
     mog_cuda->apply(cuda_frame, cuda_fgmask);
     cuda_fgmask.download(fgmask);
 
@@ -77,20 +93,49 @@ void detection_cuda(Mat& frame, Point2f& center, float& radius ){
 int main() {
 
 
-    char videoname[100] = "./best.webm";
-    VideoCapture video(videoname);
+    //char videoname[100] = "./best.webm";
+    //VideoCapture video(videoname);
+    VideoCapture video(0);
     if(!video.isOpened()) return 1;
 
 
     Point2f center(0,0);
+    Point2f center2[10] = {Point2f(0,0)};
+
+    int pos_real  = 0;
     float radius = 0;
+    bool change = true;
+    int y;
     while(true) {
+        if(change){
+            printf("Please input your destination:" );
+            scanf("%d", &y);
+            change = false;
+        }
         video >> frame;
 
         if( frame.empty() ){
             break;
         }
+       
+        frame = frame(Rect(70,0,frame.cols-70,frame.rows));
+        rotate(frame, frame, ROTATE_90_COUNTERCLOCKWISE);
+//         cout << frame.cols << frame.rows << endl;
         detection_cuda(frame, center, radius);
+        int pos = 0;
+        for(int i=0; i<40 ;i++){
+            if(center.x >= locate[i].x && center.x <= locate[i].x+locate[i].width){
+                if(center.y >= locate[i].y && center.y <= locate[i].y+locate[i].height){
+                    pos = i;
+                    break;
+                }
+            }
+        }
+        if(pos != 0){
+            pos_real = pos+1;
+            //printf("%d\n", pos_real);
+            output_route_with_direction(pos_real, y, change);
+        }
         /*
         Rect roi_rect(int(center.x-radius), int(center.y-radius), int(radius*2), int(radius*2));
         //cout << roi_rect << endl;
