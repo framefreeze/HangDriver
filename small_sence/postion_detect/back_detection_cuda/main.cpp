@@ -67,7 +67,7 @@ void detection_cuda(Mat& frame, Point2f& center, float& radius ){
         if(contourArea(contours[i]) > 1000){
             approxPolyDP( Mat(contours[i]), contours_poly[i], 3, true);
             minEnclosingCircle( contours_poly[i], center, radius );
-            circle( frame, center, (int)radius, Scalar(0,255,0), 2, 8, 0 );
+            circle( frame, center, (int)radius, Scalar(0,0,255), 2, 8, 0 );
             break;
         }
     }
@@ -108,7 +108,7 @@ int main() {
         */
         imshow("frame", frame);
 
-        if(waitKey(1) == 27) {
+        if(waitKey(30) == 27) {
             break;
         }
 

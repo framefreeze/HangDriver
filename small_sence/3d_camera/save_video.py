@@ -1,11 +1,11 @@
 import cv2
 import numpy as np
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(2)
 count = 0;
 if cap.isOpened() :
     rst,frame = cap.read()
     x,y,dim = frame.shape
-    fourcc = cv2.VideoWriter_fourcc(*'XVID')
+    fourcc = cv2.VideoWriter_fourcc(*'VIDE')
 is_recording = False
 while cap.isOpened() :
     rst,frame = cap.read()
@@ -19,8 +19,8 @@ while cap.isOpened() :
         break
     elif key == 115 :
         if not is_recording :
-            filename = 'data/video'+'{}'.format(count)+'.avi'
-            out = cv2.VideoWriter(filename,fourcc, 20.0, (x,y))
+            filename = 'data/video'+'{}'.format(count)+'.mp4'
+            out = cv2.VideoWriter(filename,fourcc, 28.0, (x,y))
             count += 1
             print('Record start: press s to end')
             is_recording = True
@@ -30,3 +30,4 @@ while cap.isOpened() :
             print('Done')
 
 cap.release()
+out.release()
