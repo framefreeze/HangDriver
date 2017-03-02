@@ -68,6 +68,15 @@ private:
   CameraCalibration  m_calibration;
   cv::Mat            m_backgroundImage;
   std::string        m_windowName;
+    int               turn;//方向变量
+
+    void drawArrow(float ax, float ay, float bx, float by, int turn);
+
+    void drawCubeModel(int turn);
+
+    void drawAugmentedScene(int turn);
+
+    void draw(int turn);
 };
 
 #endif

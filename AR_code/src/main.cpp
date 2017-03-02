@@ -100,7 +100,6 @@ void processVideo(const cv::Mat& patternImage, CameraCalibration& calibration, c
     // Grab first frame to get the frame dimensions
     cv::Mat currentFrame;  
     capture >> currentFrame;
-
     // Check the capture succeeded:
     if (currentFrame.empty())
     {
@@ -109,6 +108,7 @@ void processVideo(const cv::Mat& patternImage, CameraCalibration& calibration, c
     }
 
     cv::Size frameSize(currentFrame.cols, currentFrame.rows);
+
 
     ARPipeline pipeline(patternImage, calibration);
     ARDrawingContext drawingCtx("Markerless AR", frameSize, calibration);
@@ -131,6 +131,7 @@ void processSingleImage(const cv::Mat& patternImage, CameraCalibration& calibrat
 {
     cv::Size frameSize(image.cols, image.rows);
     ARPipeline pipeline(patternImage, calibration);
+
     ARDrawingContext drawingCtx("Markerless AR", frameSize, calibration);
 
     bool shouldQuit = false;
