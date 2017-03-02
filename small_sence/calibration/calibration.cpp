@@ -411,6 +411,7 @@ int main( int argc, char** argv )
         {
             Mat view0;
             capture >> view0;
+            view0 = view0(cv::Rect(0,0,view0.cols/2, view0.rows));
             view0.copyTo(view);
         }
         else if( i < (int)imageList.size() )
