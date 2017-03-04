@@ -40,20 +40,23 @@ void PatternTrackingInfo::computePose(const Pattern& pattern, const CameraCalibr
   }
   */
 
-  pose3d.r().mat[0][0]=0.996183;
-  pose3d.r().mat[1][0]=-0.018193;
-  pose3d.r().mat[2][0]=-0.085371;
-  pose3d.r().mat[0][1]=-0.013699;
-  pose3d.r().mat[1][1]=0.933330;
-  pose3d.r().mat[2][1]=-0.358758;
-  pose3d.r().mat[0][2]=0.086206;
-  pose3d.r().mat[1][2]=0.358558;
-  pose3d.r().mat[2][2]=0.929518;
+  pose3d.r().mat[0][0]=1.0;
+  pose3d.r().mat[1][0]=0.0;
+  pose3d.r().mat[2][0]=0.0;
+  pose3d.r().mat[0][1]=0.0;
+  pose3d.r().mat[1][1]=0.0;
+  pose3d.r().mat[2][1]=1.0;
+  pose3d.r().mat[0][2]=0.0;
+  pose3d.r().mat[1][2]=-1.0;
+  pose3d.r().mat[2][2]=0.0;
 
 
-  pose3d.t().data[0]=0.353836;
-  pose3d.t().data[1]=0.485751;
-  pose3d.t().data[2]=3.326557;
+//  pose3d.t().data[0]=0.353836;
+//  pose3d.t().data[1]=0.485751;
+//  pose3d.t().data[2]=3.326557;
+  pose3d.t().data[0]=-2.46 ;
+  pose3d.t().data[1]=-0.5;
+  pose3d.t().data[2]=5.96;
 
   // Since solvePnP finds camera location, w.r.t to marker pose, to get marker pose w.r.t to the camera we invert it.
   pose3d = pose3d.getInverted();

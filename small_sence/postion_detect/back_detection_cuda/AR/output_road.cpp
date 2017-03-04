@@ -13,7 +13,7 @@ int next_Node[50][50]={0};
 int direction;//direction 1,2,3,4 according to straight,left,right & turning around
 int dirtmp = 0;// temporary direction of 19th area
 int x,y; //for input start and final
-
+bool isInited=false;
 ifstream fin("/home/framefreeze/Documents/HangDriver/lane_mentor/necessary_files/next_node_info.txt");
 
 void init()
@@ -23,10 +23,13 @@ void init()
         fin>>x>>y>>next;
         next_Node[x][y]=next;
     }
+    isInited = true;
 }
 
 int direct(int start, int final)
 {
+//    if(!isInited)
+//        init();
     if(start == 13||start == 22||start == 24)
     {
         direction = 3;

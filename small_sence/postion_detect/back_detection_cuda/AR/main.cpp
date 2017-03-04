@@ -1,144 +1,211 @@
-/*****************************************************************************
-*   Markerless AR desktop application.
-******************************************************************************
-*   by Khvedchenia Ievgen, 5th Dec 2012
-*   http://computer-vision-talks.com
-******************************************************************************
-*   Ch3 of the book "Mastering OpenCV with Practical Computer Vision Projects"
-*   Copyright Packt Publishing 2012.
-*   http://www.packtpub.com/cool-projects-with-opencv/book
-*****************************************************************************/
+#include <iostream>
 
-////////////////////////////////////////////////////////////////////
-// File includes:
+#include <opencv2/opencv.hpp>
+#include <opencv2/cudalegacy.hpp>
+#include "output_road.cpp"
+
+/********AR********/
 #include "ARDrawingContext.hpp"
 #include "ARPipeline.hpp"
 #include "DebugHelpers.hpp"
+#include <GL/gl.h>
+#include <GL/glu.h>
 
-////////////////////////////////////////////////////////////////////
-// Standard includes:
-#include <opencv2/opencv.hpp>
-// #include <gl/gl.h>
-// #include <gl/glu.h>
-#include <gl.h>
-#include <glu.h>
+//#include "opencv2/cudabgsegm.hpp"
+//#include <cuda_runtime.h>
 
-/**
- * Processes a recorded video or live view from web-camera and allows you to adjust homography refinement and 
- * reprojection threshold in runtime.
- */
-void processVideo(const cv::Mat& patternImage, CameraCalibration& calibration, cv::VideoCapture& capture);
+using namespace std;
+using namespace cv;
+//using namespace cv::cuda;
 
-/**
- * Processes single image. The processing goes in a loop.
- * It allows you to control the detection process by adjusting homography refinement switch and 
- * reprojection threshold in runtime.
- */
-void processSingleImage(const cv::Mat& patternImage, CameraCalibration& calibration, const cv::Mat& image);
-
-/**
- * Performs full detection routine on camera frame and draws the scene using drawing context.
- * In addition, this function draw overlay with debug information on top of the AR window.
- * Returns true if processing loop should be stopped; otherwise - false.
- */
+Ptr<BackgroundSubtractor> mog_cuda = cuda::createBackgroundSubtractorMOG2();
+Ptr<BackgroundSubtractor> mog = createBackgroundSubtractorMOG2();
+Mat frame;
+/************AR***********/
 bool processFrame(const cv::Mat& cameraFrame, ARPipeline& pipeline, ARDrawingContext& drawingCtx);
+Mat ARFrame;
 
-int main(int argc, const char * argv[])
-{
-    // Change this calibration to yours:
-    CameraCalibration calibration(1040.4711914092852f, 1042.1274843132999f, 542.12340728399488f, 362.22154256297267f);
-    
-    if (argc < 2)
-    {
-        std::cout << "Input image not specified" << std::endl;
-        std::cout << "Usage: markerless_ar_demo <pattern image> [filepath to recorded video or image]" << std::endl;
-        return 1;
-    }
+Rect locate[41] = {Rect(61, 0, 64, 93), Rect(125, 0, 62, 93), Rect(61, 93, 64, 118),
+                   Rect(125, 93, 62, 118), Rect(61,211,64,91), Rect(125,211,62,91),
+                   Rect(61,301,64,94), Rect(125,301,62,94), Rect(61,395,64,120),
+                   Rect(125,395,62,120), Rect(61,516,64,54), Rect(125,516,62,54),
+                   Rect(188,395,92,60), Rect(188,455,92,61), Rect(280,395,90,60),
+                   Rect(280,455,90,61), Rect(370,0,63,93), Rect(432,0,63,93),
+                   Rect(370,93,126,118), Rect(370,211,63,91), Rect(432,211,63,91),
+                   Rect(370,301,63,94), Rect(432,301,63,94), Rect(370,395,63,60),
+                   Rect(370,455,63,61), Rect(432, 395,63,120), Rect(495, 93,52,61),
+                   Rect(495,154,52,57), Rect(188,93,92,61), Rect(280,93,90,61),
+                   Rect(188,154,92,57), Rect(280, 154,90,57), Rect(0,0,60,93),
+                   Rect(0,93,60,118), Rect(0,211,60,91), Rect(0,301,60,94),
+                   Rect(0,395,60,120), Rect(0,516,60,54), Rect(0,0,0,0),
+                   Rect(203,260,135,120)}; 
+                   
+Point2f detection(Mat& frame, Point2f& center, float& radius ){
+    center = Point2f(0,0);
+    radius = 0;
+    vector<vector<Point> > contours;
+    vector<Vec4i> hierarchy;
+    Mat fgmask;
+//    blur(frame, frame, Size(5,5), Point(-1, -1));
 
-    // Try to read the pattern:
-    cv::Mat patternImage = cv::imread(argv[1]);
-    if (patternImage.empty())
-    {
-        std::cout << "Input image cannot be read" << std::endl;
-        return 2;
-    }
+    mog->apply(frame, fgmask);
 
-    if (argc == 2)
-    {
-        cv::VideoCapture cap;
-        cap.open(0);
-        processVideo(patternImage, calibration, cap);
+    if(fgmask.channels() != 1){
+        cvtColor(fgmask, fgmask, CV_BGR2GRAY);
     }
-    else if (argc == 3)
-    {
-        std::string input = argv[2];
-        cv::Mat testImage = cv::imread(input);
-        if (!testImage.empty())
-        {
-            processSingleImage(patternImage, calibration, testImage);
+//        cuda::threshold(cuda_fgmask, cuda_fgmask,100, 255, THRESH_BINARY);
+    threshold( fgmask, fgmask, 200, 255, THRESH_BINARY ); // 参数可继续调整
+    findContours(fgmask, contours, hierarchy,  RETR_TREE, CHAIN_APPROX_SIMPLE, Point(0, 0) ); //
+
+    vector<vector<Point> > contours_poly( contours.size() );
+    for( size_t i=0; i < contours.size(); i++){
+        if(contourArea(contours[i]) > 1000){
+            approxPolyDP( Mat(contours[i]), contours_poly[i], 3, true);
+            minEnclosingCircle( contours_poly[i], center, radius );
+            circle( frame, center, (int)radius, Scalar(0,255,0), 2, 8, 0 );
+            break;
         }
-        else 
-        {
-            cv::VideoCapture cap;
-            if (cap.open(input))
-            {
-                processVideo(patternImage, calibration, cap);
+    }
+    return center;
+}
+
+void detection_cuda(Mat& frame, Point2f& center, float& radius ){
+
+    center = Point2f(-1,-1);
+    radius = 0;
+    Mat fgmask;
+    vector<vector<Point> > contours;
+    vector<Vec4i> hierarchy;
+    cuda::GpuMat cuda_frame, cuda_fgmask;
+//    blur(frame, frame, Size(5,5), Point(-1, -1));
+    cuda_frame.upload(frame);
+    
+    mog_cuda->apply(cuda_frame, cuda_fgmask);
+    cuda_fgmask.download(fgmask);
+
+    if(fgmask.channels() != 1){
+        cvtColor(fgmask, fgmask, CV_BGR2GRAY);
+    }
+//        cuda::threshold(cuda_fgmask, cuda_fgmask,100, 255, THRESH_BINARY);
+    threshold( fgmask, fgmask, 200, 255, THRESH_BINARY ); // 参数可继续调整
+    findContours(fgmask, contours, hierarchy,  RETR_TREE, CHAIN_APPROX_SIMPLE, Point(0, 0) ); //
+
+    vector<vector<Point> > contours_poly( contours.size() );
+    for( size_t i=0; i < contours.size(); i++){
+        if(contourArea(contours[i]) > 1000){
+            approxPolyDP( Mat(contours[i]), contours_poly[i], 3, true);
+            minEnclosingCircle( contours_poly[i], center, radius );
+            circle( frame, center, (int)radius, Scalar(0,0,255), 2, 8, 0 );
+            break;
+        }
+    }
+    cuda_fgmask.release();
+    cuda_frame.release();
+}
+int main() {
+
+
+    //char videoname[100] = "./best.webm";
+    //VideoCapture video(videoname);
+    VideoCapture video(0);
+//    VideoCapture ARVideo("/home/framefreeze/Documents/HangDriver/small_sence/postion_detect/back_detection_cuda/AR/output_left.mp4");
+    VideoCapture ARVideo(1);
+    if(!video.isOpened()) return 1;
+    if(!ARVideo.isOpened()) return 1;
+
+
+    Point2f center(0,0);
+    Point2f center2[10] = {Point2f(0,0)};
+
+    int pos_real  = 0;
+    float radius = 0;
+    bool change = true;
+    int y;
+
+
+    /***********AR*********/
+    int turn; //转向
+    CameraCalibration calibration(1040.4711914092852f, 1042.1274843132999f, 542.12340728399488f, 362.22154256297267f);
+    Mat patternImage = imread("/home/framefreeze/Documents/HangDriver/AR_code/release/src/pattern3.png");
+
+
+    /******hua chu AR*****/
+    ARVideo >> ARFrame;
+//    ARFrame = ARFrame(Rect(0,0,ARFrame.cols/2, ARFrame.rows));
+    rotate(ARFrame, ARFrame, ROTATE_180);
+
+    Size frameSize(ARFrame.cols, ARFrame.rows);
+
+
+    ARPipeline pipeline(patternImage, calibration);
+    ARDrawingContext drawingCtx("AR", frameSize, calibration);
+    while(true) {
+        if(change){
+            printf("Please input your destination:" );
+            scanf("%d", &y);
+            change = false;
+        }
+        video >> frame;
+        ARVideo >> ARFrame;
+
+
+        if( frame.empty() && ARFrame.empty()){
+            break;
+        }
+
+//        ARFrame = ARFrame(Rect(0,0,ARFrame.cols/2, ARFrame.rows));
+        rotate(ARFrame, ARFrame, ROTATE_180);
+        frame = frame(Rect(70,0,frame.cols-70,frame.rows));
+        rotate(frame, frame, ROTATE_90_COUNTERCLOCKWISE);
+//         cout << frame.cols << frame.rows << endl;
+        detection_cuda(frame, center, radius);
+        int pos = 0;
+        for(int i=0; i<40 ;i++){
+            if(center.x >= locate[i].x && center.x <= locate[i].x+locate[i].width){
+                if(center.y >= locate[i].y && center.y <= locate[i].y+locate[i].height){
+                    pos = i;
+                    break;
+                }
             }
         }
-    }
-    else
-    {
-        std::cerr << "Invalid number of arguments passed" << std::endl;
-        return 1;
+        if(pos != 0){
+            pos_real = pos+1;
+//            printf("%d\n", pos_real);
+//            output_route_with_direction(pos_real, y, change);
+
+        }
+
+        turn = direct(pos_real,y);
+        printf("pos_real = %d ", pos_real);
+        printf("turn_dir = %d\n",turn);
+        drawingCtx.setTurn(turn-1);
+
+        processFrame(ARFrame,pipeline,drawingCtx);
+
+        /*
+        Rect roi_rect(int(center.x-radius), int(center.y-radius), int(radius*2), int(radius*2));
+        //cout << roi_rect << endl;
+        if(radius != 0) {
+            if(roi_rect.x + roi_rect.width >= frame.cols){
+                roi_rect.width = frame.cols-20-roi_rect.x;
+            }
+            if(roi_rect.y + roi_rect.height >= frame.rows){
+                roi_rect.height = frame.rows-20-roi_rect.y;
+            }
+            Mat Roi = frame(roi_rect);
+            //cout << Roi << endl;
+            imshow("roi", Roi);
+        }
+        */
+        imshow("frame", frame);
+
+        if(waitKey(30) == 27) {
+            break;
+        }
+
     }
 
     return 0;
-}
-
-void processVideo(const cv::Mat& patternImage, CameraCalibration& calibration, cv::VideoCapture& capture)
-{
-    // Grab first frame to get the frame dimensions
-    cv::Mat currentFrame;  
-    capture >> currentFrame;
-    // Check the capture succeeded:
-    if (currentFrame.empty())
-    {
-        std::cout << "Cannot open video capture device" << std::endl;
-        return;
-    }
-
-    cv::Size frameSize(currentFrame.cols, currentFrame.rows);
-
-
-    ARPipeline pipeline(patternImage, calibration);
-    ARDrawingContext drawingCtx("Markerless AR", frameSize, calibration);
-
-    bool shouldQuit = false;
-    do
-    {
-        capture >> currentFrame;
-        if (currentFrame.empty())
-        {
-            shouldQuit = true;
-            continue;
-        }
-
-        shouldQuit = processFrame(currentFrame, pipeline, drawingCtx);
-    } while (!shouldQuit);
-}
-
-void processSingleImage(const cv::Mat& patternImage, CameraCalibration& calibration, const cv::Mat& image)
-{
-    cv::Size frameSize(image.cols, image.rows);
-    ARPipeline pipeline(patternImage, calibration);
-
-    ARDrawingContext drawingCtx("Markerless AR", frameSize, calibration);
-
-    bool shouldQuit = false;
-    do
-    {
-        shouldQuit = processFrame(image, pipeline, drawingCtx);
-    } while (!shouldQuit);
 }
 
 bool processFrame(const cv::Mat& cameraFrame, ARPipeline& pipeline, ARDrawingContext& drawingCtx)
@@ -167,7 +234,7 @@ bool processFrame(const cv::Mat& cameraFrame, ARPipeline& pipeline, ARDrawingCon
     drawingCtx.updateWindow();
 
     // Read the keyboard input:
-    int keyCode = cv::waitKey(5); 
+    int keyCode = cv::waitKey(5);
 
     bool shouldQuit = false;
     if (keyCode == '+' || keyCode == '=')
@@ -191,5 +258,3 @@ bool processFrame(const cv::Mat& cameraFrame, ARPipeline& pipeline, ARDrawingCon
 
     return shouldQuit;
 }
-
-

@@ -26,7 +26,7 @@ void ARDrawingContextDrawCallback(void* param);
 class ARDrawingContext
 {
 public:
-  ARDrawingContext(std::string windowName, cv::Size frameSize, const CameraCalibration& c,int t);
+  ARDrawingContext(std::string windowName, cv::Size frameSize, const CameraCalibration& c);
   ~ARDrawingContext();
 
   
@@ -38,6 +38,10 @@ public:
   void updateBackground(const cv::Mat& frame);
 
   void updateWindow();
+
+    //! Set Turn
+    void setTurn(int);
+
 
 private:
     friend void ARDrawingContextDrawCallback(void* param);

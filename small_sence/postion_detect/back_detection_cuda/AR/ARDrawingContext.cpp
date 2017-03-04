@@ -17,8 +17,8 @@
 // Standard includes:
 // #include <gl/gl.h>
 // #include <gl/glu.h>
-#include <gl.h>
-#include <glu.h>
+#include <GL/gl.h>
+#include <GL/glu.h>
 #include <cmath>
 void ARDrawingContextDrawCallback(void* param)
 {
@@ -29,12 +29,11 @@ void ARDrawingContextDrawCallback(void* param)
     }
 }
 
-ARDrawingContext::ARDrawingContext(std::string windowName, cv::Size frameSize, const CameraCalibration& c, int t)
+ARDrawingContext::ARDrawingContext(std::string windowName, cv::Size frameSize, const CameraCalibration& c)
   : m_isTextureInitialized(false)
   , m_calibration(c)
   , m_windowName(windowName)
 {
-    this->turn = t;//转向变量
     // Create window with OpenGL support
     cv::namedWindow(windowName, cv::WINDOW_OPENGL);
 
@@ -398,7 +397,7 @@ void ARDrawingContext::drawArrow(float ax,float ay,float bx,float by,int turn){
                  {0.25,0.25,0.5,0.5,-0.5,-0.25},
                  {0.5,0.5,1.0,1.0,-1.0,-0.5},
                  {0.25,0.25,0.5,0.5,-0.5,-0.25}};
-  printf("mx: %f\nmy: %f\n:ky: %f\nkx: %f",mx,my,ky,kx);
+//  printf("mx: %f\nmy: %f\n:ky: %f\nkx: %f",mx,my,ky,kx);
 //  glNormal3f(0.0f,1.0f,0.0f);
   glVertex3f(mx+x[turn][0]*kx,my+y[turn][0]*ky, 0.0f);
   glNormal3f(0.0f, 1.0f, 0.0f);//放在第一个下面有奇效
@@ -414,4 +413,7 @@ void ARDrawingContext::drawArrow(float ax,float ay,float bx,float by,int turn){
 //    glVertex3f(0.5f, 0.0f, 0.0f);
   glEnd();
   }
+}
+void ARDrawingContext::setTurn(int t) {
+  this->turn = t;
 }
