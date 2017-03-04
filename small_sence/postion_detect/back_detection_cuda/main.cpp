@@ -3,6 +3,12 @@
 #include <opencv2/opencv.hpp>
 #include <opencv2/cudalegacy.hpp>
 #include "output_road.cpp"
+
+/********AR********/
+#include "AR/ARDrawingContext.hpp"
+#include "AR/ARPipeline.hpp"
+#include "AR/DebugHelpers.hpp"
+
 //#include "opencv2/cudabgsegm.hpp"
 //#include <cuda_runtime.h>
 
@@ -12,6 +18,9 @@ using namespace cv;
 Ptr<BackgroundSubtractor> mog_cuda = cuda::createBackgroundSubtractorMOG2();
 Ptr<BackgroundSubtractor> mog = createBackgroundSubtractorMOG2();
 Mat frame;
+/************AR***********/
+bool processFrame(const cv::Mat& cameraFrame, ARPipeline& pipeline, ARDrawingContext& drawingCtx);
+Mat ARFrame;
 
 Rect locate[41] = {Rect(61, 0, 64, 93), Rect(125, 0, 62, 93), Rect(61, 93, 64, 118),
                    Rect(125, 93, 62, 118), Rect(61,211,64,91), Rect(125,211,62,91),
@@ -96,6 +105,7 @@ int main() {
     //char videoname[100] = "./best.webm";
     //VideoCapture video(videoname);
     VideoCapture video(0);
+    VideoCapture ARVideo("./AR/output_left.mp4");
     if(!video.isOpened()) return 1;
 
 
@@ -106,6 +116,15 @@ int main() {
     float radius = 0;
     bool change = true;
     int y;
+
+
+    /***********AR*********/
+    int turn; //转向
+    CameraCalibration calibration(1040.4711914092852f, 1042.1274843132999f, 542.12340728399488f, 362.22154256297267f);
+    Mat patternImage = imread("");
+
+
+
     while(true) {
         if(change){
             printf("Please input your destination:" );
@@ -113,7 +132,7 @@ int main() {
             change = false;
         }
         video >> frame;
-
+        ARVideo >> ARFrame;
         if( frame.empty() ){
             break;
         }
@@ -121,7 +140,7 @@ int main() {
         frame = frame(Rect(70,0,frame.cols-70,frame.rows));
         rotate(frame, frame, ROTATE_90_COUNTERCLOCKWISE);
 //         cout << frame.cols << frame.rows << endl;
-        detection_cuda(frame, center, radius);
+        detection(frame, center, radius);
         int pos = 0;
         for(int i=0; i<40 ;i++){
             if(center.x >= locate[i].x && center.x <= locate[i].x+locate[i].width){
@@ -134,8 +153,19 @@ int main() {
         if(pos != 0){
             pos_real = pos+1;
             //printf("%d\n", pos_real);
-            output_route_with_direction(pos_real, y, change);
+            //output_route_with_direction(pos_real, y, change);
+            turn = direct(pos_real,y);
         }
+
+        /******hua chu AR*****/
+        Size frameSize(ARFrame.cols, ARFrame.rows);
+
+
+        ARPipeline pipeline(patternImage, calibration);
+        ARDrawingContext drawingCtx("Markerless AR", frameSize, calibration,turn);
+
+        processFrame(ARFrame,pipeline,drawingCtx);
+
         /*
         Rect roi_rect(int(center.x-radius), int(center.y-radius), int(radius*2), int(radius*2));
         //cout << roi_rect << endl;
@@ -160,4 +190,55 @@ int main() {
     }
 
     return 0;
+}
+
+bool processFrame(const cv::Mat& cameraFrame, ARPipeline& pipeline, ARDrawingContext& drawingCtx)
+{
+    // Clone image used for background (we will draw overlay on it)
+    cv::Mat img = cameraFrame.clone();
+
+    // Draw information:
+    if (pipeline.m_patternDetector.enableHomographyRefinement)
+        cv::putText(img, "Pose refinement: On   ('h' to switch off)", cv::Point(10,15), CV_FONT_HERSHEY_PLAIN, 1, CV_RGB(0,200,0));
+    else
+        cv::putText(img, "Pose refinement: Off  ('h' to switch on)",  cv::Point(10,15), CV_FONT_HERSHEY_PLAIN, 1, CV_RGB(0,200,0));
+
+    cv::putText(img, "RANSAC threshold: " + ToString(pipeline.m_patternDetector.homographyReprojectionThreshold) + "( Use'-'/'+' to adjust)", cv::Point(10, 30), CV_FONT_HERSHEY_PLAIN, 1, CV_RGB(0,200,0));
+
+    // Set a new camera frame:
+    drawingCtx.updateBackground(img);
+
+    // Find a pattern and update it's detection status:
+    drawingCtx.isPatternPresent = pipeline.processFrame(cameraFrame);
+
+    // Update a pattern pose:
+    drawingCtx.patternPose = pipeline.getPatternLocation();
+
+    // Request redraw of the window:
+    drawingCtx.updateWindow();
+
+    // Read the keyboard input:
+    int keyCode = cv::waitKey(5);
+
+    bool shouldQuit = false;
+    if (keyCode == '+' || keyCode == '=')
+    {
+        pipeline.m_patternDetector.homographyReprojectionThreshold += 0.2f;
+        pipeline.m_patternDetector.homographyReprojectionThreshold = std::min(10.0f, pipeline.m_patternDetector.homographyReprojectionThreshold);
+    }
+    else if (keyCode == '-')
+    {
+        pipeline.m_patternDetector.homographyReprojectionThreshold -= 0.2f;
+        pipeline.m_patternDetector.homographyReprojectionThreshold = std::max(0.0f, pipeline.m_patternDetector.homographyReprojectionThreshold);
+    }
+    else if (keyCode == 'h')
+    {
+        pipeline.m_patternDetector.enableHomographyRefinement = !pipeline.m_patternDetector.enableHomographyRefinement;
+    }
+    else if (keyCode == 27 || keyCode == 'q')
+    {
+        shouldQuit = true;
+    }
+
+    return shouldQuit;
 }

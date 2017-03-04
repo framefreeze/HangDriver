@@ -4,7 +4,8 @@ import numpy as np
 # HOST = ''
 PORT = 10999
 s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-s.bind(('',PORT))
+s.bind(('192.168.1.105',PORT))
+#s.settimeout(50)
 s.listen(1)
 cap = cv2.VideoCapture(0)
 while True:
@@ -21,12 +22,12 @@ while True:
             ret, frame = cap.read()
             #print(frame.shape[0])
 
-            frame = cv2.resize(frame,(2560,720))
+            frame = cv2.resize(frame,(640,360))
             # cv2.imshow('naem', frame)
             # cv2.waitKey()
             # print(frame.shape)
             data = frame.tostring()
-            print(len(data))
+            #print(len(data))
             # print(data)
             #print(data)
             conn.sendall(data)
