@@ -17,8 +17,8 @@
 // Standard includes:
 // #include <gl/gl.h>
 // #include <gl/glu.h>
-#include <gl.h>
-#include <glu.h>
+#include <GL/gl.h>
+#include <GL/glu.h>
 #include <cmath>
 void ARDrawingContextDrawCallback(void* param)
 {
@@ -351,7 +351,7 @@ void ARDrawingContext::drawArrow(float ax,float ay,float bx,float by){
   float my=(ay+by)/2;
   float ky=sqrt((ax-bx)*(ax-bx)/((ax-bx)*(ax-bx)+(ay-by)*(ay-by)));
   float kx=sqrt((ay-by)*(ay-by)/((ax-bx)*(ax-bx)+(ay-by)*(ay-by)));
-  printf("mx: %f\nmy: %f\n:ky: %f\nkx: %f",mx,my,ky,kx);
+//  printf("mx: %f\nmy: %f\n:ky: %f\nkx: %f",mx,my,ky,kx);
 //  glNormal3f(0.0f,1.0f,0.0f);
   glVertex3f(mx+0.5f*kx,my+0.5f*ky, 0.0f);
   glNormal3f(0.0f, 1.0f, 0.0f);//放在第一个下面有奇效

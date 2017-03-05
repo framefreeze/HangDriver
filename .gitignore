@@ -93,3 +93,10 @@ dkms.conf
 
 ## CLion
 .idea
+
+
+## cmake-build-debug/
+cmake-build-debug
+
+## video
+video

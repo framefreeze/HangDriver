@@ -18,10 +18,10 @@
 ////////////////////////////////////////////////////////////////////
 // Standard includes:
 #include <opencv2/opencv.hpp>
-// #include <gl/gl.h>
-// #include <gl/glu.h>
-#include <gl.h>
-#include <glu.h>
+#include <GL/gl.h>
+#include <GL/glu.h>
+//#include <gl.h>
+//#include <glu.h>
 
 /**
  * Processes a recorded video or live view from web-camera and allows you to adjust homography refinement and 
@@ -46,8 +46,8 @@ bool processFrame(const cv::Mat& cameraFrame, ARPipeline& pipeline, ARDrawingCon
 int main(int argc, const char * argv[])
 {
     // Change this calibration to yours:
-    CameraCalibration calibration(1040.4711914092852f, 1042.1274843132999f, 542.12340728399488f, 362.22154256297267f);
-    
+    CameraCalibration calibration2(1040.4711914092852f, 1042.1274843132999f, 542.12340728399488f, 362.22154256297267f);
+    CameraCalibration calibration(1089.6576034546229f, 1089.6576034546229f, 666.40552914383454f, 352.70296505848034f);
     if (argc < 2)
     {
         std::cout << "Input image not specified" << std::endl;
@@ -100,6 +100,8 @@ void processVideo(const cv::Mat& patternImage, CameraCalibration& calibration, c
     // Grab first frame to get the frame dimensions
     cv::Mat currentFrame;  
     capture >> currentFrame;
+//    currentFrame = currentFrame(cv::Rect(0,0,currentFrame.cols/2, currentFrame.rows));
+    cv::rotate(currentFrame, currentFrame, cv::ROTATE_180);
 
     // Check the capture succeeded:
     if (currentFrame.empty())
@@ -117,6 +119,8 @@ void processVideo(const cv::Mat& patternImage, CameraCalibration& calibration, c
     do
     {
         capture >> currentFrame;
+//        currentFrame = currentFrame(cv::Rect(0,0,currentFrame.cols/2, currentFrame.rows));
+        cv::rotate(currentFrame, currentFrame, cv::ROTATE_180);
         if (currentFrame.empty())
         {
             shouldQuit = true;

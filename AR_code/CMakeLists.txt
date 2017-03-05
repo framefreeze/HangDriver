@@ -4,8 +4,10 @@ project(MARKERLESS_AR)
 find_package(OpenCV REQUIRED )
 find_package(OpenGL REQUIRED )
 
-set(OpenGL_INCLUDE_DIR /System/Library/Frameworks/OpenGL.framework/Headers)
-set(OpenGL_LIBRARY_DIR /System/Library/Frameworks/OpenGL.framework/Libraries)
+#set(OpenGL_INCLUDE_DIR /System/Library/Frameworks/OpenGL.framework/Headers)
+#set(OpenGL_LIBRARY_DIR /System/Library/Frameworks/OpenGL.framework/Libraries)
+
+#message(${OpenGL_INCLUDE_DIR})
 
 include_directories(${OpenCV_INCLUDE_DIR})
 include_directories(${OpenGL_INCLUDE_DIR})
