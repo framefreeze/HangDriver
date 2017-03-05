@@ -28,8 +28,8 @@ void init()
 
 int direct(int start, int final)
 {
-//    if(!isInited)
-//        init();
+    if(!isInited)
+        init();
     if(start == 13||start == 22||start == 24)
     {
         direction = 3;

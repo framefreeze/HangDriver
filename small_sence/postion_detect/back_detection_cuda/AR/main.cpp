@@ -107,9 +107,9 @@ int main() {
 
     //char videoname[100] = "./best.webm";
     //VideoCapture video(videoname);
-    VideoCapture video(0);
+    VideoCapture video(2);
 //    VideoCapture ARVideo("/home/framefreeze/Documents/HangDriver/small_sence/postion_detect/back_detection_cuda/AR/output_left.mp4");
-    VideoCapture ARVideo(1);
+    VideoCapture ARVideo(0);
     if(!video.isOpened()) return 1;
     if(!ARVideo.isOpened()) return 1;
 
@@ -125,13 +125,14 @@ int main() {
 
     /***********AR*********/
     int turn; //转向
-    CameraCalibration calibration(1040.4711914092852f, 1042.1274843132999f, 542.12340728399488f, 362.22154256297267f);
-    Mat patternImage = imread("/home/framefreeze/Documents/HangDriver/AR_code/release/src/pattern3.png");
+//    CameraCalibration calibration(1.1153431542851911e+03, 1.1153431542851911e+03,  6.7231337275674616e+02, 3.2544085260248806e+02);
+    CameraCalibration calibration(1.1153431542851911e+03, 1.1153431542851911e+03,  320.1, 240);
+    Mat patternImage = imread("/home/framefreeze/Documents/HangDriver/AR_code/cmake-build-debug/src/pic3.png");
 
 
     /******hua chu AR*****/
     ARVideo >> ARFrame;
-//    ARFrame = ARFrame(Rect(0,0,ARFrame.cols/2, ARFrame.rows));
+    ARFrame = ARFrame(Rect(0,0,ARFrame.cols/2, ARFrame.rows));
     rotate(ARFrame, ARFrame, ROTATE_180);
 
     Size frameSize(ARFrame.cols, ARFrame.rows);
@@ -153,7 +154,7 @@ int main() {
             break;
         }
 
-//        ARFrame = ARFrame(Rect(0,0,ARFrame.cols/2, ARFrame.rows));
+        ARFrame = ARFrame(Rect(0,0,ARFrame.cols/2, ARFrame.rows));
         rotate(ARFrame, ARFrame, ROTATE_180);
         frame = frame(Rect(70,0,frame.cols-70,frame.rows));
         rotate(frame, frame, ROTATE_90_COUNTERCLOCKWISE);

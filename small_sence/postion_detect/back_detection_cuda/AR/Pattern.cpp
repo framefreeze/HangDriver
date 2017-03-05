@@ -27,36 +27,35 @@ void PatternTrackingInfo::computePose(const Pattern& pattern, const CameraCalibr
   cv::Rodrigues(Rvec, rotMat);
 
   // Copy to transformation matrix
-/*
+
   for (int col=0; col<3; col++)
   {
     for (int row=0; row<3; row++)
-    {        
+    {
      pose3d.r().mat[row][col] = rotMat(row,col); // Copy rotation component
-      printf("R:row:%d col:%d mat:%f\n",row,col,rotMat(row,col));
+//      printf("R:row:%d col:%d mat:%f\n",row,col,rotMat(row,col));
     }
     pose3d.t().data[col] = Tvec(col); // Copy translation component
-    printf("T:col:%d data:%f\n",col,Tvec(col));
+//    printf("T:col:%d data:%f\n",col,Tvec(col));
   }
-  */
 
-  pose3d.r().mat[0][0]=1.0;
-  pose3d.r().mat[1][0]=0.0;
-  pose3d.r().mat[2][0]=0.0;
-  pose3d.r().mat[0][1]=0.0;
-  pose3d.r().mat[1][1]=0.0;
-  pose3d.r().mat[2][1]=1.0;
-  pose3d.r().mat[0][2]=0.0;
-  pose3d.r().mat[1][2]=-1.0;
-  pose3d.r().mat[2][2]=0.0;
+  pose3d.r().mat[0][0]=0.999;
+  pose3d.r().mat[1][0]=0.01;
+  pose3d.r().mat[2][0]=-0.03;
+  pose3d.r().mat[0][1]=-0.0037;
+  pose3d.r().mat[1][1]=0.12;
+  pose3d.r().mat[2][1]=-0.99;
+  pose3d.r().mat[0][2]=-0.006;
+  pose3d.r().mat[1][2]=0.99;
+  pose3d.r().mat[2][2]=0.12;
 
 
 //  pose3d.t().data[0]=0.353836;
 //  pose3d.t().data[1]=0.485751;
 //  pose3d.t().data[2]=3.326557;
-  pose3d.t().data[0]=-2.46 ;
-  pose3d.t().data[1]=-0.5;
-  pose3d.t().data[2]=5.96;
+  pose3d.t().data[0]= -0.49 ;
+  pose3d.t().data[1]= 1.05;
+  pose3d.t().data[2]= 6.55;
 
   // Since solvePnP finds camera location, w.r.t to marker pose, to get marker pose w.r.t to the camera we invert it.
   pose3d = pose3d.getInverted();
