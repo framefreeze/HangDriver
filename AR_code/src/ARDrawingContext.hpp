@@ -39,6 +39,8 @@ public:
 
   void updateWindow();
 
+    //! Set turn
+    void setTurn();
 private:
     friend void ARDrawingContextDrawCallback(void* param);
     //! Render entire scene in the OpenGl window
@@ -61,6 +63,8 @@ private:
 
     //! Draw the Arrow
     void drawArrow(float,float,float,float);
+
+
 
 private:
   bool               m_isTextureInitialized;

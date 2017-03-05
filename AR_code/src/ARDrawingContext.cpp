@@ -17,8 +17,8 @@
 // Standard includes:
 // #include <gl/gl.h>
 // #include <gl/glu.h>
-#include <gl.h>
-#include <glu.h>
+#include <GL/gl.h>
+#include <GL/glu.h>
 #include <cmath>
 void ARDrawingContextDrawCallback(void* param)
 {
@@ -34,7 +34,6 @@ ARDrawingContext::ARDrawingContext(std::string windowName, cv::Size frameSize, c
   , m_calibration(c)
   , m_windowName(windowName)
 {
-    this->turn = 0;//转向变量
     // Create window with OpenGL support
     cv::namedWindow(windowName, cv::WINDOW_OPENGL);
 
@@ -414,4 +413,9 @@ void ARDrawingContext::drawArrow(float ax,float ay,float bx,float by,int turn){
 //    glVertex3f(0.5f, 0.0f, 0.0f);
   glEnd();
   }
+}
+void ARDrawingContext::setTurn() {
+    int t;
+    std::cin>>t;
+    this->turn = t;
 }

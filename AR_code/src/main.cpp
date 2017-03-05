@@ -20,8 +20,8 @@
 #include <opencv2/opencv.hpp>
 // #include <gl/gl.h>
 // #include <gl/glu.h>
-#include <gl.h>
-#include <glu.h>
+#include <GL/gl.h>
+#include <GL/glu.h>
 
 /**
  * Processes a recorded video or live view from web-camera and allows you to adjust homography refinement and 
@@ -66,7 +66,7 @@ int main(int argc, const char * argv[])
     if (argc == 2)
     {
         cv::VideoCapture cap;
-        cap.open(0);
+        cap.open(1);
         processVideo(patternImage, calibration, cap);
     }
     else if (argc == 3)
@@ -106,16 +106,13 @@ void processVideo(const cv::Mat& patternImage, CameraCalibration& calibration, c
         std::cout << "Cannot open video capture device" << std::endl;
         return;
     }
-
     cv::Size frameSize(currentFrame.cols, currentFrame.rows);
-
-
     ARPipeline pipeline(patternImage, calibration);
     ARDrawingContext drawingCtx("Markerless AR", frameSize, calibration);
-
     bool shouldQuit = false;
     do
     {
+
         capture >> currentFrame;
         if (currentFrame.empty())
         {
@@ -131,7 +128,6 @@ void processSingleImage(const cv::Mat& patternImage, CameraCalibration& calibrat
 {
     cv::Size frameSize(image.cols, image.rows);
     ARPipeline pipeline(patternImage, calibration);
-
     ARDrawingContext drawingCtx("Markerless AR", frameSize, calibration);
 
     bool shouldQuit = false;
@@ -144,7 +140,11 @@ void processSingleImage(const cv::Mat& patternImage, CameraCalibration& calibrat
 bool processFrame(const cv::Mat& cameraFrame, ARPipeline& pipeline, ARDrawingContext& drawingCtx)
 {
     // Clone image used for background (we will draw overlay on it)
+
     cv::Mat img = cameraFrame.clone();
+
+    //setTurn
+    drawingCtx.setTurn();
 
     // Draw information:
     if (pipeline.m_patternDetector.enableHomographyRefinement)
