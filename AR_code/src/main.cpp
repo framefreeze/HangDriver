@@ -66,7 +66,7 @@ int main(int argc, const char * argv[])
     if (argc == 2)
     {
         cv::VideoCapture cap;
-        cap.open(1);
+        cap.open(0);
         processVideo(patternImage, calibration, cap);
     }
     else if (argc == 3)
@@ -100,7 +100,7 @@ void processVideo(const cv::Mat& patternImage, CameraCalibration& calibration, c
     // Grab first frame to get the frame dimensions
     cv::Mat currentFrame;  
     capture >> currentFrame;
-    currentFrame = currentFrame(cv::Rect(0,0,currentFrame.cols/2, currentFrame.rows));
+//    currentFrame = currentFrame(cv::Rect(0,0,currentFrame.cols/2, currentFrame.rows));
     cv::rotate(currentFrame, currentFrame, cv::ROTATE_180);
 
     // Check the capture succeeded:
@@ -119,7 +119,7 @@ void processVideo(const cv::Mat& patternImage, CameraCalibration& calibration, c
     do
     {
         capture >> currentFrame;
-        currentFrame = currentFrame(cv::Rect(0,0,currentFrame.cols/2, currentFrame.rows));
+//        currentFrame = currentFrame(cv::Rect(0,0,currentFrame.cols/2, currentFrame.rows));
         cv::rotate(currentFrame, currentFrame, cv::ROTATE_180);
         if (currentFrame.empty())
         {
