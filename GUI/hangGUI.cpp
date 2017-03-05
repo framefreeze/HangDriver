@@ -7,12 +7,12 @@ using namespace cv;
 
 void detect_Mouse(int event,int x,int y,int flags,void *param);
 void hangGUI::init() {
-    this->bgimg = imread("/Users/Kevin/Documents/Projects/HangDriver/GUI/fgps.png");//初始化背景
+    this->bgimg = imread("/home/framefreeze/Documents/HangDriver/GUI/fgps.png");//初始化背景
     if(bgimg.empty()){
         printf("error");
        return ;
     }
-    this->pentagram = imread("/Users/Kevin/Documents/Projects/HangDriver/GUI/pentagram.png");//初始化目的地图标
+    this->pentagram = imread("/home/framefreeze/Documents/HangDriver/GUI/pentagram.png");//初始化目的地图标
     resize(pentagram,pentagram,Size(32,32));
     resize(bgimg, bgimg, Size(512, 512));
 
@@ -33,4 +33,11 @@ Mat hangGUI::getImage(int x, int y){
     addWeighted(tmp, 0.5 ,pentagram,0.5,0.0,tmp);
     return frame;
 
+}
+Mat hangGUI::drawPos(int x, int y) {
+    Mat frame;
+    bgimg.copyTo(frame);
+    circle(frame, Point(x,y), 5, Scalar(0,255,0),3);
+
+    return frame;
 }
