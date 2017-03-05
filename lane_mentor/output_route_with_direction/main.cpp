@@ -8,23 +8,32 @@
 using namespace std;
 
 int next_Node[50][50]={0};
+string route[50][50];
 //int route[100]={0};
 //int counter = 0;
 int direction;//direction 1,2,3,4 according to straight,left,right & turning around
 int dirtmp = 0;// temporary direction of 19th area
 int x,y; //for input start and final
 
-ifstream fin("/Users/yujifan/Desktop/next_node_info.txt");
-
-void init()
+ifstream fin1("/Users/yujifan/Desktop/next_node_info.txt");
+ifstream fin2("/Users/yujifan/Desktop/routes.txt");
+void init1()
 {
     int x,y,next;
     for (int i = 0; i < 753; ++i) {
-        fin>>x>>y>>next;
+        fin1>>x>>y>>next;
         next_Node[x][y]=next;
     }
 }
-
+void init2()
+{
+    int x,y;
+    string c;
+    for (int i = 0; i < 753; ++i) {
+        fin2>>x>>y>>c;
+        route[x][y]=c;
+    }
+}
 int direct(int start, int final)
 {
     if(start == 29||start == 13||start == 22||start == 24)
@@ -160,7 +169,12 @@ int direct(int start, int final)
     return direction;
 }
 
-void output(int start, int final)
+string Routes1(int x,int y)
+{
+    return route[x][y];
+}
+
+void output1(int start, int final)
 {
     if(next_Node[start][final]!=0)
     {
@@ -172,13 +186,25 @@ void output(int start, int final)
     }
 }
 
+void output2(int start, int final)
+{
+    if(next_Node[start][final]!=NULL)
+    {
+        cout<<Routes1(start,final)<<endl;
+    }
+    else
+    {
+        printf("No existed access!");
+    }
+}
+
 void output_route_with_direction()
 {
-    init();
+    init1();
     while (cin>>x>>y) {
         if(x != y)
         {
-            output(x,y);
+            output1(x,y);
             cout << "direction is :" << direct(x,y)<<endl;
         }
         else
@@ -189,8 +215,25 @@ void output_route_with_direction()
     }
 }
 
+
+void output_routes()
+{
+    init1();
+    init2();
+    while (cin>>x>>y) {
+        if(x != y)
+        {
+            output2(x,y);
+        }
+        else
+        {
+            cout << "Arrival !"<<endl;
+            break;
+        }
+    }
+}
 int main()
 {
-    output_route_with_direction();
+    output_routes();
     return 0;
 }
