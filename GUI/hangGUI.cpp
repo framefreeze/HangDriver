@@ -13,10 +13,10 @@ void hangGUI::init() {
        return ;
     }
     this->pentagram = imread("/Users/Kevin/Documents/Projects/HangDriver/GUI/pentagram.png");//初始化目的地图标
+    resize(pentagram,pentagram,Size(32,32));
     resize(bgimg, bgimg, Size(512, 512));
 
-    imshow("background", bgimg);//显示背景
-    setMouseCallback("background",detect_Mouse);//鼠标状态监测
+
 
 //    print()
     waitKey();
@@ -27,6 +27,10 @@ void hangGUI::draw_pentagram(int x, int y, Mat& img) {
 Mat hangGUI::getImage(int x, int y){
     Mat frame;
     bgimg.copyTo(frame);
-
+    Rect roi(x-pentagram.cols/2, y-pentagram.rows/2, pentagram.cols, pentagram.rows);
+//    frame(roi) = pentagram;
+    Mat tmp = frame(roi);
+    addWeighted(tmp, 0.5 ,pentagram,0.5,0.0,tmp);
     return frame;
+
 }
