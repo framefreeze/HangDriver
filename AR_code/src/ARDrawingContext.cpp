@@ -283,12 +283,42 @@ void ARDrawingContext::drawCubeModel() {
 //  glVertex3f(-1.0f,  1.0f,  1.0f);  // Point 3 (Left)
 //  glVertex3f(-1.0f,  1.0f, -1.0f);  // Point 4 (Left)
   /*改进箭头*/
-  float ax[10]={1,1,1.1,1.11,1.12,1.14,1.2,1.4,1.7,2};
-  float ay[10]={1,2,3,4,5,6,7,8,9,10};
-  float bx[10]={-1,-1,-0.9,-0.89,-0.88,-0.86,-0.8,-0.6,-0.3,0};
-  float by[10]={1,2,3,4.5,6,7.5,9.5,11,13,16};
-  for(int i=0;i<10;i++){
-    drawArrow(ax[i],ay[i],bx[i],by[i]);
+
+//  float ax[10]={1,1,1.1,1.,1.12,1.14,1.2,1.4,1.7,3};
+//  float ay[10]={1,2,3,4,5,6,7,8,9,10};
+//  float bx[10]={-1,-1,-0.9,-0.89,-0.88,-0.86,-0.8,-0.6,-0.3,-1};
+//  float by[10]={1,2,3,4.5,6,7.5,9.5,11,13,16};
+
+  /* int j for test*/
+
+ //int j = 5;
+
+  float ax[6][5]={{1,1,1,1,1},
+                  {1,1.2,1.4,1.7,2.1},
+                  {1,0.875,0.5,0.2,-0.4},
+                  {1,1.05,1.1,1.4,1.8},
+                  {1,0.96,0.92,0.85,0.7},
+                  {1,0.0,0.5,0.0,-0.5}};
+  float ay[6][5]={{1,2,3,4,5},
+                  {1,2,3,3.8,4.6},
+                  {1,1.8,2.6,3.5,4},
+                  {1,1.25,1.65,1.75,2},
+                  {1,2.1,3.2,4.3,5.4},
+                  {1,0.0,1.9,0.0,2.5}};
+  float bx[6][5]={{-1,-1,-1,-1,-1},
+                  {-1,-0.8,-0.6,-0.1,0.5},
+                  {-1,-1.075,-1.1,-1.3,-1.4},
+                  {-1,-0.4,0.4,1.2,1.8},
+                  {-1,-1.04,-1.08,-1.13,-1.3},
+                  {-1,0.0,-1.05,0.0,-1.2}};
+  float by[6][5]={{1,2,3,4,5},
+                  {1,2.2,3.5,4.5,5.4},
+                  {1,1.55,2.2,2.6,3},
+                  {1,2.2,3,3.8,4},
+                  {1,1.9,2.8,3.6,4.6},
+                  {1,0.0,1.4,0.0,2}};
+  for(int i=0;i<5;i++){
+    drawArrow(ax[this->turn][i],ay[this->turn][i],bx[this->turn][i],by[this->turn][i],this->turn);
   }
 //  for (int i = 0; i < 10; i++) {
 //    glBegin(GL_POLYGON);
@@ -345,25 +375,51 @@ void ARDrawingContext::drawCubeModel() {
 
   glPopAttrib();
 }
-void ARDrawingContext::drawArrow(float ax,float ay,float bx,float by){
+void ARDrawingContext::drawArrow(float ax,float ay,float bx,float by,int turn){
+  if(ax!=0.0f||ay!=0.0f||bx!=0.0f||by!=0.0f){
   glBegin(GL_POLYGON);
   float mx = (ax+bx)/2;
   float my=(ay+by)/2;
   float ky=sqrt((ax-bx)*(ax-bx)/((ax-bx)*(ax-bx)+(ay-by)*(ay-by)));
   float kx=sqrt((ay-by)*(ay-by)/((ax-bx)*(ax-bx)+(ay-by)*(ay-by)));
+<<<<<<< HEAD
 //  printf("mx: %f\nmy: %f\n:ky: %f\nkx: %f",mx,my,ky,kx);
+=======
+  if(ay>by){
+    kx=-kx;
+  }
+  float x[6][6]={{0.5,-0.5,-1.0,1.0,1.0,0.5},
+                 {0.5,-0.5,-1.0,1.0,1.0,0.5},
+                 {0.25,-0.25,-0.5,0.5,0.5,0.25},
+                 {0.25,-0.25,-0.5,0.5,0.5,0.25},
+                 {0.5,-0.5,-1.0,1.0,1.0,0.5},
+                 {0.25,-0.25,-0.5,0.5,0.5,0.25}};
+  float y[6][6]={{0.5,0.5,1.0,1.0,-1.0,-0.5},
+                 {0.5,0.5,1.0,1.0,-1.0,-0.5},
+                 {0.25,0.25,0.5,0.5,-0.5,-0.25},
+                 {0.25,0.25,0.5,0.5,-0.5,-0.25},
+                 {0.5,0.5,1.0,1.0,-1.0,-0.5},
+                 {0.25,0.25,0.5,0.5,-0.5,-0.25}};
+  printf("mx: %f\nmy: %f\n:ky: %f\nkx: %f",mx,my,ky,kx);
+>>>>>>> Dev
 //  glNormal3f(0.0f,1.0f,0.0f);
-  glVertex3f(mx+0.5f*kx,my+0.5f*ky, 0.0f);
+  glVertex3f(mx+x[turn][0]*kx,my+y[turn][0]*ky, 0.0f);
   glNormal3f(0.0f, 1.0f, 0.0f);//放在第一个下面有奇效
-  glVertex3f(mx-0.5f*ky,my+0.5f*kx, 0.0f);
-  glVertex3f(mx-1.0f*ky,my+1.0f*kx, 0.0f);
-  glVertex3f(mx+1.0f*kx,my+1.0f*ky, 0.0f);
-  glVertex3f(mx+1.0f*ky,my-1.0f*kx, 0.0f);
-  glVertex3f(mx+0.5f*ky,my-0.5f*kx, 0.0f);
+  glVertex3f(mx+x[turn][1]*ky,my+y[turn][1]*kx, 0.0f);
+  glVertex3f(mx+x[turn][2]*ky,my+y[turn][2]*kx, 0.0f);
+  glVertex3f(mx+x[turn][3]*kx,my+y[turn][3]*ky, 0.0f);
+  glVertex3f(mx+x[turn][4]*ky,my+y[turn][4]*kx, 0.0f);
+  glVertex3f(mx+x[turn][5]*ky,my+y[turn][5]*kx, 0.0f);
 //    glVertex3f(-0.5f, 0.0f, 0.0f);
 //    glVertex3f(-1.0f, 0.0f, 0.0f);
 //    glVertex3f(0.0f, 1.0f, 0.0f);
 //    glVertex3f(1.0f, 0.0f, 0.0f);
 //    glVertex3f(0.5f, 0.0f, 0.0f);
   glEnd();
+  }
+}
+void ARDrawingContext::setTurn() {
+    int t;
+    std::cin>>t;
+    this->turn = t;
 }

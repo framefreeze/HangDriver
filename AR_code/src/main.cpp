@@ -18,10 +18,17 @@
 ////////////////////////////////////////////////////////////////////
 // Standard includes:
 #include <opencv2/opencv.hpp>
+<<<<<<< HEAD
 #include <GL/gl.h>
 #include <GL/glu.h>
 //#include <gl.h>
 //#include <glu.h>
+=======
+// #include <gl/gl.h>
+// #include <gl/glu.h>
+#include <GL/gl.h>
+#include <GL/glu.h>
+>>>>>>> Dev
 
 /**
  * Processes a recorded video or live view from web-camera and allows you to adjust homography refinement and 
@@ -66,7 +73,7 @@ int main(int argc, const char * argv[])
     if (argc == 2)
     {
         cv::VideoCapture cap;
-        cap.open(0);
+        cap.open(1);
         processVideo(patternImage, calibration, cap);
     }
     else if (argc == 3)
@@ -100,24 +107,25 @@ void processVideo(const cv::Mat& patternImage, CameraCalibration& calibration, c
     // Grab first frame to get the frame dimensions
     cv::Mat currentFrame;  
     capture >> currentFrame;
+<<<<<<< HEAD
 //    currentFrame = currentFrame(cv::Rect(0,0,currentFrame.cols/2, currentFrame.rows));
     cv::rotate(currentFrame, currentFrame, cv::ROTATE_180);
 
+=======
+>>>>>>> Dev
     // Check the capture succeeded:
     if (currentFrame.empty())
     {
         std::cout << "Cannot open video capture device" << std::endl;
         return;
     }
-
     cv::Size frameSize(currentFrame.cols, currentFrame.rows);
-
     ARPipeline pipeline(patternImage, calibration);
     ARDrawingContext drawingCtx("Markerless AR", frameSize, calibration);
-
     bool shouldQuit = false;
     do
     {
+
         capture >> currentFrame;
 //        currentFrame = currentFrame(cv::Rect(0,0,currentFrame.cols/2, currentFrame.rows));
         cv::rotate(currentFrame, currentFrame, cv::ROTATE_180);
@@ -147,7 +155,11 @@ void processSingleImage(const cv::Mat& patternImage, CameraCalibration& calibrat
 bool processFrame(const cv::Mat& cameraFrame, ARPipeline& pipeline, ARDrawingContext& drawingCtx)
 {
     // Clone image used for background (we will draw overlay on it)
+
     cv::Mat img = cameraFrame.clone();
+
+    //setTurn
+    drawingCtx.setTurn();
 
     // Draw information:
     if (pipeline.m_patternDetector.enableHomographyRefinement)
