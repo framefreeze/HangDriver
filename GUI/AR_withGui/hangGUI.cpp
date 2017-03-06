@@ -5,7 +5,7 @@
 #include "hangGUI.hpp"
 using namespace cv;
 
-void detect_Mouse(int event,int x,int y,int flags,void *param);
+void detect_Mouse(int event,int x,int y,int flags,void *param);//鼠标回调函数
 void hangGUI::init() {
     this->bgimg = imread("/home/framefreeze/Documents/HangDriver/GUI/fgps.png");//初始化背景
     if(bgimg.empty()){
@@ -24,7 +24,7 @@ void hangGUI::init() {
 void hangGUI::draw_pentagram(int x, int y, Mat& img) {
 
 }
-Mat hangGUI::getImage(int x, int y){
+Mat hangGUI::getImage(int x, int y){//得到含有五角星的图片
     Mat frame;
     bgimg.copyTo(frame);
     Rect roi(x-pentagram.cols/2, y-pentagram.rows/2, pentagram.cols, pentagram.rows);
