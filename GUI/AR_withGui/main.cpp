@@ -22,6 +22,7 @@ using namespace cv;
 void detect_Mouse(int event,int x,int y,int flags,void *param);
 int win_x, win_y;
 bool is_update = false;
+bool change = true;
 
 Ptr<BackgroundSubtractor> mog_cuda = cuda::createBackgroundSubtractorMOG2();
 Ptr<BackgroundSubtractor> mog = createBackgroundSubtractorMOG2();
@@ -109,6 +110,10 @@ void detection_cuda(Mat& frame, Point2f& center, float& radius ){
 }
 int main() {
 
+    Mat window_frame; //作为整体视频的单帧图像
+    int dst_pos;
+
+    /*××××××××××GUI×××××××*/
     hangGUI hanggui;
     hanggui.init();
     imshow("background", hanggui.bgimg);//显示背景
@@ -116,9 +121,9 @@ int main() {
 
     //char videoname[100] = "./best.webm";
     //VideoCapture video(videoname);
-    VideoCapture video(2);
+    VideoCapture video(0);
 //    VideoCapture ARVideo("/home/framefreeze/Documents/HangDriver/small_sence/postion_detect/back_detection_cuda/AR/output_left.mp4");
-    VideoCapture ARVideo(0);
+    VideoCapture ARVideo(1);
     if(!video.isOpened()) return 1;
     if(!ARVideo.isOpened()) return 1;
 
@@ -126,16 +131,16 @@ int main() {
     Point2f center(0,0);
     Point2f center2[10] = {Point2f(0,0)};
 
-    int pos_real  = 0;
+    int pos_real  = 8;
     float radius = 0;
-    bool change = true;
     int y;
 
 
     /***********AR*********/
     int turn; //转向
 //    CameraCalibration calibration(1.1153431542851911e+03, 1.1153431542851911e+03,  6.7231337275674616e+02, 3.2544085260248806e+02);
-    CameraCalibration calibration(1.1153431542851911e+03, 1.1153431542851911e+03,  320.1, 240);
+    CameraCalibration calibration(1.1153431542851911e+03, 1.1153431542851911e+03,  320.1, 240); // 360p
+//    CameraCalibration calibration(1.1153431542851911e+03, 1.1153431542851911e+03,  640, 360); // 720p
     Mat patternImage = imread("/home/framefreeze/Documents/HangDriver/AR_code/cmake-build-debug/src/pic3.png");
 
 
@@ -151,13 +156,16 @@ int main() {
     ARDrawingContext drawingCtx("AR", frameSize, calibration);
     while(true) {
         if(is_update){
-            Mat img = hanggui.getImage(win_x, win_y);
+            Mat img = hanggui.getImage(win_x, win_y, dst_pos);
             imshow("background", img);
         }
+        if(waitKey(30) == 27) {
+            break;
+        }
 
-        if(change){
-            printf("Please input your destination:" );
-            scanf("%d", &y);
+        if(is_update && change){
+//            printf("Please input your destination:" );
+//            scanf("%d", &y);
             change = false;
         }
         video >> frame;
@@ -174,10 +182,7 @@ int main() {
         rotate(frame, frame, ROTATE_90_COUNTERCLOCKWISE);
 //         cout << frame.cols << frame.rows << endl;
         detection_cuda(frame, center, radius);
-        if(center.x != -1){
-            Mat img = hanggui.drawPos(center.x, center.y);
-            imshow("background", img);
-        }
+
         int pos = 0;
         for(int i=0; i<40 ;i++){
             if(center.x >= locate[i].x && center.x <= locate[i].x+locate[i].width){
@@ -187,18 +192,26 @@ int main() {
                 }
             }
         }
-        if(pos != 0){
+
+
+        if(pos != 0 && is_update){
             pos_real = pos+1;
 
 //            printf("%d\n", pos_real);
 //            output_route_with_direction(pos_real, y, change);
 
         }
+        if(is_update){
+            turn = direct(pos_real,dst_pos);
+            Mat img = hanggui.drawPos(center.x, center.y, pos_real, turn);
+            imshow("background", img);
 
-        turn = direct(pos_real,y);
-        printf("pos_real = %d ", pos_real);
-        printf("turn_dir = %d\n",turn);
-        drawingCtx.setTurn(turn-1);
+            printf("pos_real = %d ", pos_real);
+            printf("turn_dir = %d\n",turn);
+            drawingCtx.setTurn(turn-1);
+        }
+
+
 
         processFrame(ARFrame,pipeline,drawingCtx);
 
@@ -222,6 +235,7 @@ int main() {
         if(waitKey(30) == 27) {
             break;
         }
+
 
     }
 
@@ -285,12 +299,25 @@ void detect_Mouse(int event,int x,int y,int flags,void *param) {
         win_x = x;
         win_y = y;
         is_update = true;
+//        if(!change) change = true;
     }
 
     //rectangle()
 
 }
 
+int check_locate(int x, int y){
+    int pos_dst = -1;
+    for (int i=0; i<40; i++){
+        if(x >= locate[i].x && x <= locate[i].x+locate[i].width){
+            if(y >= locate[i].y && y <= locate[i].y+locate[i].height){
+                pos_dst = i;
+                break;
+            }
+        }
+    }
+    return pos_dst;
+}
 
 void draw_pos(){
 

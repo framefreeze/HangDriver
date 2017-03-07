@@ -30,6 +30,9 @@ int direct(int start, int final)
 {
     if(!isInited)
         init();
+    if(start == final){
+        return -1;
+    }
     if(start == 13||start == 22||start == 24)
     {
         direction = 3;

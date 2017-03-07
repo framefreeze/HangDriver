@@ -156,7 +156,7 @@ void ARDrawingContext::buildProjectionMatrix(const CameraCalibration& calibratio
   float nearPlane = 0.01f;  // Near clipping distance
   float farPlane  = 100.0f;  // Far clipping distance
 
-  // Camera parameters
+  // Camera parametersIm
   float f_x = calibration.fx(); // Focal length in x axis
   float f_y = calibration.fy(); // Focal length in y axis (usually the same?)
   float c_x = calibration.cx(); // Camera primary point x
@@ -293,27 +293,37 @@ void ARDrawingContext::drawCubeModel() {
 
  //int j = 5;
 
-  float ax[6][5]={{1,1,1,1,1},
+  float ax[6][5]={
+//                    {1,1,1,1,1},
+                    {1,1,1,1,1},
                   {1,1.2,1.4,1.7,2.1},
                   {1,0.875,0.5,0.2,-0.4},
                   {1,1.05,1.1,1.4,1.8},
                   {1,0.96,0.92,0.85,0.7},
                   {1,0.0,0.5,0.0,-0.5}};
-  float ay[6][5]={{1,2,3,4,5},
+  float ay[6][5]={
+//                    {1,2,3,4,5},
+                    {-3,-2,-1,0,1},
                   {1,2,3,3.8,4.6},
-                  {1,1.8,2.6,3.5,4},
+//                  {1,1.8,2.6,3.5,4},
+                    {-3,-2.2,-1.4,-0.5,0},
                   {1,1.25,1.65,1.75,2},
                   {1,2.1,3.2,4.3,5.4},
                   {1,0.0,1.9,0.0,2.5}};
-  float bx[6][5]={{-1,-1,-1,-1,-1},
+  float bx[6][5]={
+//                    {-1,-1,-1,-1,-1},
+                    {-1,-1,-1,-1,-1},
                   {-1,-0.8,-0.6,-0.1,0.5},
                   {-1,-1.075,-1.1,-1.3,-1.4},
                   {-1,-0.4,0.4,1.2,1.8},
                   {-1,-1.04,-1.08,-1.13,-1.3},
                   {-1,0.0,-1.05,0.0,-1.2}};
-  float by[6][5]={{1,2,3,4,5},
+  float by[6][5]={
+//                    {1,2,3,4,5},
+                    {-3,-2,-1,0,1},
                   {1,2.2,3.5,4.5,5.4},
-                  {1,1.55,2.2,2.6,3},
+//                  {1,1.55,2.2,2.6,3},
+                    {-3,-2.45,-1.8,-1.4,-1},
                   {1,2.2,3,3.8,4},
                   {1,1.9,2.8,3.6,4.6},
                   {1,0.0,1.4,0.0,2}};
