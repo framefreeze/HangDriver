@@ -11,6 +11,7 @@ class hangGUI {
 public:
     void init();
     cv::Mat getImage(int,int);
+    cv::Mat drawPos(int, int);
     int x;
     int y;
     cv::Mat pentagram;

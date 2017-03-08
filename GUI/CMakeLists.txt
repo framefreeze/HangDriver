@@ -12,10 +12,6 @@ include_directories(${OpenGL_INCLUDE_DIR})
 
 link_directories(${OpenCV_LIBRARY_DIR})
 link_directories(${OpenGL_LIBRARY_DIR})
+include_directories(/usr/local/cuda/include)
 
-add_executable(gui_Int 
-main.cpp
-        hangGUI.cpp hangGUI.hpp)
-
-target_link_libraries( gui_Int ${OpenCV_LIBRARIES} )
-target_link_libraries( gui_Int ${OPENGL_LIBRARIES} )
+add_subdirectory(AR_withGui)

@@ -73,7 +73,7 @@ int main(int argc, const char * argv[])
     if (argc == 2)
     {
         cv::VideoCapture cap;
-        cap.open(1);
+        cap.open(0);
         processVideo(patternImage, calibration, cap);
     }
     else if (argc == 3)
@@ -179,10 +179,10 @@ bool processFrame(const cv::Mat& cameraFrame, ARPipeline& pipeline, ARDrawingCon
     drawingCtx.patternPose = pipeline.getPatternLocation();
 
     // Request redraw of the window:
-    drawingCtx.updateWindow();
+    drawingCtx.updateWindow();\
 
     // Read the keyboard input:
-    int keyCode = cv::waitKey(5); 
+    int keyCode = cv::waitKey();
 
     bool shouldQuit = false;
     if (keyCode == '+' || keyCode == '=')

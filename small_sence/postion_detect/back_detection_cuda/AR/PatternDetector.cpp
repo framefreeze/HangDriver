@@ -11,7 +11,7 @@
 
 ////////////////////////////////////////////////////////////////////
 // File includes:
-//#define _DEBUG 1
+#define _DEBUG 1
 #include "PatternDetector.hpp"
 #include "DebugHelpers.hpp"
 
@@ -169,10 +169,10 @@ bool PatternDetector::findPattern(const cv::Mat& image, PatternTrackingInfo& inf
 //            info.points2d[3] = cv::Point2f(726, 444);
 //            info.points2d[2] = cv::Point2f(1138, 448);
 //            info.points2d[1] = cv::Point2f(1088, 371);
-            info.points2d[0] = cv::Point2f(116, 379);
-            info.points2d[3] = cv::Point2f(14, 467);
-            info.points2d[2] = cv::Point2f(421, 475);
-            info.points2d[1] = cv::Point2f(389, 383);
+//            info.points2d[0] = cv::Point2f(116, 379);
+//            info.points2d[3] = cv::Point2f(14, 467);
+//            info.points2d[2] = cv::Point2f(421, 475);
+//            info.points2d[1] = cv::Point2f(389, 383);
 #if _DEBUG
             info.draw2dContour(tmp, CV_RGB(200,0,0));
 #endif
@@ -183,10 +183,10 @@ bool PatternDetector::findPattern(const cv::Mat& image, PatternTrackingInfo& inf
 
             // Transform contour with rough homography
             cv::perspectiveTransform(m_pattern.points2d, info.points2d, m_roughHomography);
-            info.points2d[0] = cv::Point2f(116, 379);
-            info.points2d[3] = cv::Point2f(14, 467);
-            info.points2d[2] = cv::Point2f(421, 475);
-            info.points2d[1] = cv::Point2f(389, 383);
+//            info.points2d[0] = cv::Point2f(116, 379);
+//            info.points2d[3] = cv::Point2f(14, 467);
+//            info.points2d[2] = cv::Point2f(421, 475);
+//            info.points2d[1] = cv::Point2f(389, 383);
 #if _DEBUG
             info.draw2dContour(tmp, CV_RGB(0,200,0));
 #endif
