@@ -21,8 +21,12 @@ Rect locate2[41] = {Rect(61, 0, 64, 93), Rect(125, 0, 62, 93), Rect(61, 93, 64, 
                    Rect(0,395,60,120), Rect(0,516,60,54), Rect(0,0,0,0),
                    Rect(203,260,135,120)};
 
+<<<<<<< HEAD
 //void detect_Mouse(int event,int x,int y,int flags,void *param);
 int check_locate2(int x, int y);
+=======
+void detect_Mouse(int event,int x,int y,int flags,void *param);//鼠标回调函数
+>>>>>>> 9c1c41cf9846f16c43a360c0e15f81ef95a8d0aa
 void hangGUI::init() {
     Mat tmp = imread("/home/framefreeze/Documents/HangDriver/GUI/fgps.png");
     resize(tmp, tmp, Size(512, 512));
@@ -47,7 +51,11 @@ void hangGUI::init() {
 void hangGUI::draw_pentagram(int x, int y, Mat& img) {
 
 }
+<<<<<<< HEAD
 Mat hangGUI::getImage(int x, int y, int& dst){
+=======
+Mat hangGUI::getImage(int x, int y){//得到含有五角星的图片
+>>>>>>> 9c1c41cf9846f16c43a360c0e15f81ef95a8d0aa
     Mat frame;
     bgimg.copyTo(frame);
     Rect roi(x-pentagram.cols/2, y-pentagram.rows/2, pentagram.cols, pentagram.rows);

@@ -19,17 +19,26 @@ using namespace std;
 using namespace cv;
 //using namespace cv::cuda;
 
+<<<<<<< HEAD
 void detect_Mouse(int event,int x,int y,int flags,void *param);
 int win_x, win_y;
 bool is_update = false;
 bool change = true;
+=======
+/********GUI模块********/
+void detect_Mouse(int event,int x,int y,int flags,void *param);//监测鼠标回调函数
+int win_x, win_y;//点击鼠标的坐标
+bool is_update = false;//判断是否需要更新坐标
+>>>>>>> 9c1c41cf9846f16c43a360c0e15f81ef95a8d0aa
 
+/********CUDA模块********/
 Ptr<BackgroundSubtractor> mog_cuda = cuda::createBackgroundSubtractorMOG2();
 Ptr<BackgroundSubtractor> mog = createBackgroundSubtractorMOG2();
-Mat frame;
+
+Mat frame;//fgps摄像头的帧
 /************AR***********/
-bool processFrame(const cv::Mat& cameraFrame, ARPipeline& pipeline, ARDrawingContext& drawingCtx);
-Mat ARFrame;
+bool processFrame(const cv::Mat& cameraFrame, ARPipeline& pipeline, ARDrawingContext& drawingCtx);//执行AR模块
+Mat ARFrame;//双目摄像头的帧
 
 Rect locate[41] = {Rect(61, 0, 64, 93), Rect(125, 0, 62, 93), Rect(61, 93, 64, 118),
                    Rect(125, 93, 62, 118), Rect(61,211,64,91), Rect(125,211,62,91),
@@ -75,7 +84,7 @@ Point2f detection(Mat& frame, Point2f& center, float& radius ){
     return center;
 }
 
-void detection_cuda(Mat& frame, Point2f& center, float& radius ){
+void detection_cuda(Mat& frame, Point2f& center, float& radius ){//CUDA识别
 
     center = Point2f(-1,-1);
     radius = 0;
@@ -109,21 +118,31 @@ void detection_cuda(Mat& frame, Point2f& center, float& radius ){
     cuda_frame.release();
 }
 int main() {
+<<<<<<< HEAD
 
     Mat window_frame; //作为整体视频的单帧图像
     int dst_pos;
 
     /*××××××××××GUI×××××××*/
+=======
+    /********GUI模块********/
+>>>>>>> 9c1c41cf9846f16c43a360c0e15f81ef95a8d0aa
     hangGUI hanggui;
     hanggui.init();
     imshow("background", hanggui.bgimg);//显示背景
     setMouseCallback("background",detect_Mouse);//鼠标状态监测
 
+<<<<<<< HEAD
     //char videoname[100] = "./best.webm";
     //VideoCapture video(videoname);
     VideoCapture video(0);
 //    VideoCapture ARVideo("/home/framefreeze/Documents/HangDriver/small_sence/postion_detect/back_detection_cuda/AR/output_left.mp4");
     VideoCapture ARVideo(1);
+=======
+    /********摄像头初始化********/
+    VideoCapture video(2);
+    VideoCapture ARVideo(0);
+>>>>>>> 9c1c41cf9846f16c43a360c0e15f81ef95a8d0aa
     if(!video.isOpened()) return 1;
     if(!ARVideo.isOpened()) return 1;
 
@@ -139,26 +158,34 @@ int main() {
     /***********AR*********/
     int turn; //转向
 //    CameraCalibration calibration(1.1153431542851911e+03, 1.1153431542851911e+03,  6.7231337275674616e+02, 3.2544085260248806e+02);
+<<<<<<< HEAD
     CameraCalibration calibration(1.1153431542851911e+03, 1.1153431542851911e+03,  320.1, 240); // 360p
 //    CameraCalibration calibration(1.1153431542851911e+03, 1.1153431542851911e+03,  640, 360); // 720p
     Mat patternImage = imread("/home/framefreeze/Documents/HangDriver/AR_code/cmake-build-debug/src/pic3.png");
+=======
+    CameraCalibration calibration(1.1153431542851911e+03, 1.1153431542851911e+03,  320.1, 240);
+    Mat patternImage = imread("/home/framefreeze/Documents/HangDriver/AR_code/cmake-build-debug/src/pic3.png");//没意义的图片
+>>>>>>> 9c1c41cf9846f16c43a360c0e15f81ef95a8d0aa
 
 
-    /******hua chu AR*****/
+    /******AR 双目摄像头帧处理*****/
     ARVideo >> ARFrame;
     ARFrame = ARFrame(Rect(0,0,ARFrame.cols/2, ARFrame.rows));
     rotate(ARFrame, ARFrame, ROTATE_180);
-
     Size frameSize(ARFrame.cols, ARFrame.rows);
 
-
+    /********AR预处理********/
     ARPipeline pipeline(patternImage, calibration);
     ARDrawingContext drawingCtx("AR", frameSize, calibration);
+
+    /********循环每一帧********/
     while(true) {
+        /********GUI********/
         if(is_update){
             Mat img = hanggui.getImage(win_x, win_y, dst_pos);
             imshow("background", img);
         }
+<<<<<<< HEAD
         if(waitKey(30) == 27) {
             break;
         }
@@ -166,23 +193,37 @@ int main() {
         if(is_update && change){
 //            printf("Please input your destination:" );
 //            scanf("%d", &y);
+=======
+        /********FGPS输入********/
+        if(change){
+            printf("Please input your destination:" );
+            scanf("%d", &y);
+>>>>>>> 9c1c41cf9846f16c43a360c0e15f81ef95a8d0aa
             change = false;
         }
+        /********读入帧********/
         video >> frame;
         ARVideo >> ARFrame;
-
-
         if( frame.empty() && ARFrame.empty()){
             break;
         }
-
         ARFrame = ARFrame(Rect(0,0,ARFrame.cols/2, ARFrame.rows));
         rotate(ARFrame, ARFrame, ROTATE_180);
         frame = frame(Rect(70,0,frame.cols-70,frame.rows));
         rotate(frame, frame, ROTATE_90_COUNTERCLOCKWISE);
 //         cout << frame.cols << frame.rows << endl;
+        /********运行检测********/
         detection_cuda(frame, center, radius);
+<<<<<<< HEAD
 
+=======
+        /********GUI 画出车当前坐标********/
+        if(center.x != -1){
+            Mat img = hanggui.drawPos(center.x, center.y);
+            imshow("background", img);
+        }
+        /********FGPS 检测 小车所在区域********/
+>>>>>>> 9c1c41cf9846f16c43a360c0e15f81ef95a8d0aa
         int pos = 0;
         for(int i=0; i<40 ;i++){
             if(center.x >= locate[i].x && center.x <= locate[i].x+locate[i].width){
@@ -201,6 +242,7 @@ int main() {
 //            output_route_with_direction(pos_real, y, change);
 
         }
+<<<<<<< HEAD
         if(is_update){
             turn = direct(pos_real,dst_pos);
             Mat img = hanggui.drawPos(center.x, center.y, pos_real, turn);
@@ -214,6 +256,14 @@ int main() {
 
 
         processFrame(ARFrame,pipeline,drawingCtx);
+=======
+        /********AR道路引导处理********/
+        turn = direct(pos_real,y);//求出转向方向
+        printf("pos_real = %d ", pos_real);
+        printf("turn_dir = %d\n",turn);
+        drawingCtx.setTurn(turn-1);
+        processFrame(ARFrame,pipeline,drawingCtx);//画箭头
+>>>>>>> 9c1c41cf9846f16c43a360c0e15f81ef95a8d0aa
 
         /*
         Rect roi_rect(int(center.x-radius), int(center.y-radius), int(radius*2), int(radius*2));
@@ -242,6 +292,7 @@ int main() {
     return 0;
 }
 
+/********AR画箭头函数********/
 bool processFrame(const cv::Mat& cameraFrame, ARPipeline& pipeline, ARDrawingContext& drawingCtx)
 {
     // Clone image used for background (we will draw overlay on it)
@@ -292,7 +343,7 @@ bool processFrame(const cv::Mat& cameraFrame, ARPipeline& pipeline, ARDrawingCon
 
     return shouldQuit;
 }
-
+/********鼠标回调函数********/
 void detect_Mouse(int event,int x,int y,int flags,void *param) {
     if (event == CV_EVENT_LBUTTONUP) {//鼠标点击需要加强robust
         printf("x: %d,y: %d\n", x, y);
