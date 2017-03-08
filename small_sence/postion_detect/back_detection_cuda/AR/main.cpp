@@ -107,9 +107,9 @@ int main() {
 
     //char videoname[100] = "./best.webm";
     //VideoCapture video(videoname);
-    VideoCapture video(2);
+    VideoCapture video(0);
 //    VideoCapture ARVideo("/home/framefreeze/Documents/HangDriver/small_sence/postion_detect/back_detection_cuda/AR/output_left.mp4");
-    VideoCapture ARVideo(0);
+    VideoCapture ARVideo(1);
     if(!video.isOpened()) return 1;
     if(!ARVideo.isOpened()) return 1;
 
@@ -181,7 +181,8 @@ int main() {
         printf("turn_dir = %d\n",turn);
         drawingCtx.setTurn(turn-1);
 
-        processFrame(ARFrame,pipeline,drawingCtx);
+//        ARFrame = cv::Mat::zeros(ARFrame.rows, ARFrame.cols, CV_32F);
+        processFrame(cv::Mat::zeros(ARFrame.rows, ARFrame.cols, CV_32F),pipeline,drawingCtx);
 
         /*
         Rect roi_rect(int(center.x-radius), int(center.y-radius), int(radius*2), int(radius*2));

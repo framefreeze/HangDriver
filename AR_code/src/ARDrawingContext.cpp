@@ -216,7 +216,7 @@ void ARDrawingContext::drawCubeModel() {
 
   glPushAttrib(GL_COLOR_BUFFER_BIT | GL_CURRENT_BIT | GL_ENABLE_BIT | GL_LIGHTING_BIT | GL_POLYGON_BIT);
 
-  glColor4f(0.4f, 0.8f, 1.0f, 0.5f);         // Full Brightness, 50% Alpha ( NEW )背景颜色
+  glColor4f(0.4f, 0.8f, 1.0f, 0.0f);         // Full Brightness, 50% Alpha ( NEW )背景颜色
   glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);       // Blending Function For Translucency Based On Source Alpha
   glEnable(GL_BLEND);
 
