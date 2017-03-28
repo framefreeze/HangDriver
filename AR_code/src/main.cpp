@@ -20,8 +20,8 @@
 #include <opencv2/opencv.hpp>
 // #include <gl/gl.h>
 // #include <gl/glu.h>
-#include <GL/gl.h>
-#include <GL/glu.h>
+#include <gl.h>
+#include <glu.h>
 
 /**
  * Processes a recorded video or live view from web-camera and allows you to adjust homography refinement and 
