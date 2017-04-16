@@ -39,7 +39,7 @@ public:
     void train(const Pattern& pattern);
 
     /**
-    * Initialize Pattern structure from the input image.
+    * Initialize PatternRF structure from the input image.
     * This function finds the feature points and extract descriptors for them.
     */
     void buildPatternFromImage(const cv::Mat& image, Pattern& pattern) const;
