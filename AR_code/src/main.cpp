@@ -10,6 +10,7 @@
 *****************************************************************************/
 
 ////////////////////////////////////////////////////////////////////
+#define APPLE 1
 // File includes:
 #include "ARDrawingContext.hpp"
 #include "ARPipeline.hpp"
@@ -18,17 +19,16 @@
 ////////////////////////////////////////////////////////////////////
 // Standard includes:
 #include <opencv2/opencv.hpp>
-<<<<<<< HEAD
-#include <GL/gl.h>
-#include <GL/glu.h>
-//#include <gl.h>
-//#include <glu.h>
-=======
-// #include <gl/gl.h>
-// #include <gl/glu.h>
-#include <GL/gl.h>
-#include <GL/glu.h>
->>>>>>> Dev
+
+
+#if APPLE
+    #include <gl.h>
+    #include <glu.h>
+#else
+    #include <GL/gl.h>
+    #include <GL/glu.h>
+
+#endif
 
 /**
  * Processes a recorded video or live view from web-camera and allows you to adjust homography refinement and 
@@ -54,7 +54,8 @@ int main(int argc, const char * argv[])
 {
     // Change this calibration to yours:
     CameraCalibration calibration2(1040.4711914092852f, 1042.1274843132999f, 542.12340728399488f, 362.22154256297267f);
-    CameraCalibration calibration(1089.6576034546229f, 1089.6576034546229f, 666.40552914383454f, 352.70296505848034f);
+    CameraCalibration calibration(9.9423918882311898e+02, 9.9423918882311898e+02, 6.0137200957740095e+02, 3.3964666038906381e+02);
+//    CameraCalibration calibration(1089.6576034546229f, 1089.6576034546229f, 666.40552914383454f, 352.70296505848034f);
     if (argc < 2)
     {
         std::cout << "Input image not specified" << std::endl;
@@ -107,12 +108,8 @@ void processVideo(const cv::Mat& patternImage, CameraCalibration& calibration, c
     // Grab first frame to get the frame dimensions
     cv::Mat currentFrame;  
     capture >> currentFrame;
-<<<<<<< HEAD
-//    currentFrame = currentFrame(cv::Rect(0,0,currentFrame.cols/2, currentFrame.rows));
-    cv::rotate(currentFrame, currentFrame, cv::ROTATE_180);
+//    cv::resize(currentFrame, currentFrame, cv::Size(640,480));
 
-=======
->>>>>>> Dev
     // Check the capture succeeded:
     if (currentFrame.empty())
     {
@@ -127,8 +124,9 @@ void processVideo(const cv::Mat& patternImage, CameraCalibration& calibration, c
     {
 
         capture >> currentFrame;
+//        cv::resize(currentFrame, currentFrame, cv::Size(640,480));
 //        currentFrame = currentFrame(cv::Rect(0,0,currentFrame.cols/2, currentFrame.rows));
-        cv::rotate(currentFrame, currentFrame, cv::ROTATE_180);
+//        cv::rotate(currentFrame, currentFrame, cv::ROTATE_180);
         if (currentFrame.empty())
         {
             shouldQuit = true;
@@ -179,10 +177,10 @@ bool processFrame(const cv::Mat& cameraFrame, ARPipeline& pipeline, ARDrawingCon
     drawingCtx.patternPose = pipeline.getPatternLocation();
 
     // Request redraw of the window:
-    drawingCtx.updateWindow();\
+    drawingCtx.updateWindow();
 
     // Read the keyboard input:
-    int keyCode = cv::waitKey();
+    int keyCode = cv::waitKey(10);
 
     bool shouldQuit = false;
     if (keyCode == '+' || keyCode == '=')
