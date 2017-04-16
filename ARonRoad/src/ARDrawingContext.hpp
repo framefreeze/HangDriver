@@ -50,7 +50,6 @@ private:
 private:
     bool               m_isTextureInitialized;
     unsigned int       m_backgroundTextureId;
-    CameraCalibration  m_calibration;
     cv::Mat            m_backgroundImage;
     std::string        m_windowName;
 };

@@ -14,9 +14,8 @@ void ARDrawingContextDrawCallback(void* param)
     }
 }
 
-ARDrawingContext::ARDrawingContext(std::string windowName, cv::Size frameSize, const CameraCalibration& c)
+ARDrawingContext::ARDrawingContext(std::string windowName, cv::Size frameSize)
         : m_isTextureInitialized(false)
-        , m_calibration(c)
         , m_windowName(windowName)
 {
     // Create window with OpenGL support

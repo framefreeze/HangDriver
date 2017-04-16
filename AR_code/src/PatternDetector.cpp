@@ -10,6 +10,7 @@
 *****************************************************************************/
 
 ////////////////////////////////////////////////////////////////////
+#define _DEBUG 0
 // File includes:
 #include "PatternDetector.hpp"
 #include "DebugHelpers.hpp"
@@ -164,10 +165,15 @@ bool PatternDetector::findPattern(const cv::Mat& image, PatternTrackingInfo& inf
 
             // Transform contour with precise homography
             cv::perspectiveTransform(m_pattern.points2d, info.points2d, info.homography);
-            info.points2d[0] = cv::Point2f(816, 367);
-            info.points2d[3] = cv::Point2f(726, 444);
-            info.points2d[2] = cv::Point2f(1138, 448);
-            info.points2d[1] = cv::Point2f(1088, 371);
+//            info.points2d[0] = cv::Point2f(816, 367);
+//            info.points2d[3] = cv::Point2f(726, 444);
+//            info.points2d[2] = cv::Point2f(1138, 448);
+//            info.points2d[1] = cv::Point2f(1088, 371);
+
+            info.points2d[0] = cv::Point2f(471, 490);
+            info.points2d[1] = cv::Point2f(796, 493);
+            info.points2d[2] = cv::Point2f(891, 722);
+            info.points2d[3] = cv::Point2f(332, 710);
 #if _DEBUG
             info.draw2dContour(tmp, CV_RGB(200,0,0));
 #endif
@@ -178,10 +184,19 @@ bool PatternDetector::findPattern(const cv::Mat& image, PatternTrackingInfo& inf
 
             // Transform contour with rough homography
             cv::perspectiveTransform(m_pattern.points2d, info.points2d, m_roughHomography);
-            info.points2d[0] = cv::Point2f(816, 367);
-            info.points2d[3] = cv::Point2f(726, 444);
-            info.points2d[2] = cv::Point2f(1138, 448);
-            info.points2d[1] = cv::Point2f(1088, 371);
+//            info.points2d[0] = cv::Point2f(816, 367);
+//            info.points2d[3] = cv::Point2f(726, 444);
+//            info.points2d[2] = cv::Point2f(1138, 448);
+//            info.points2d[1] = cv::Point2f(1088, 371);
+
+//            info.points2d[0] = cv::Point2f(282, 396);
+//            info.points2d[1] = cv::Point2f(408, 401);
+//            info.points2d[2] = cv::Point2f(429, 476);
+//            info.points2d[3] = cv::Point2f(267, 470);
+            info.points2d[0] = cv::Point2f(471, 490);
+            info.points2d[1] = cv::Point2f(796, 493);
+            info.points2d[2] = cv::Point2f(891, 722);
+            info.points2d[3] = cv::Point2f(332, 710);
 #if _DEBUG
             info.draw2dContour(tmp, CV_RGB(0,200,0));
 #endif

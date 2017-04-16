@@ -410,8 +410,10 @@ int main( int argc, char** argv )
         if( capture.isOpened() )
         {
             Mat view0;
-            capture >> view0;
-            view0.copyTo(view);
+            capture >> view;
+            // resize(view, view, Size(640, 480));
+            // view0 = view0(cv::Rect(0,0,view0.cols/2, view0.rows));
+            // view0.copyTo(view);
         }
         else if( i < (int)imageList.size() )
             view = imread(imageList[i], 1);
@@ -536,7 +538,7 @@ int main( int argc, char** argv )
             //undistort( view, rview, cameraMatrix, distCoeffs, cameraMatrix );
             remap(view, rview, map1, map2, INTER_LINEAR);
             imshow("Image View", rview);
-            char c = (char)waitKey();
+            char c = (char)waitKey(10);
             if( c == 27 || c == 'q' || c == 'Q' )
                 break;
         }
