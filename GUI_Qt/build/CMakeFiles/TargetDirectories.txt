@@ -1,0 +1,4 @@
+/Users/DavidWang/Documents/test/opencv/qt/gui_qt/build/CMakeFiles/rebuild_cache.dir
+/Users/DavidWang/Documents/test/opencv/qt/gui_qt/build/CMakeFiles/edit_cache.dir
+/Users/DavidWang/Documents/test/opencv/qt/gui_qt/build/CMakeFiles/test_qt.dir
+/Users/DavidWang/Documents/test/opencv/qt/gui_qt/build/CMakeFiles/test_qt_automoc.dir
