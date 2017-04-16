@@ -388,9 +388,11 @@ int main( int argc, char** argv )
         else
             capture.open(inputFilename);
     }
-    else
-        capture.open(cameraId);
-
+    else {
+        capture.open(2);
+        capture.set(CV_CAP_PROP_FRAME_WIDTH, 1280);
+        capture.set(CV_CAP_PROP_FRAME_HEIGHT, 720);
+    }
     if( !capture.isOpened() && imageList.empty() )
         return fprintf( stderr, "Could not initialize video (%d) capture\n",cameraId ), -2;
 
