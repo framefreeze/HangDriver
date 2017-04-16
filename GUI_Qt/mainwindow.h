@@ -35,6 +35,8 @@ private:
     Mat frame, fgps;
     QImage display, fgps_q;
 
+    QImage mat2QImage(Mat img);
+
 };
 
 #endif // MAINWINDOW_H
