@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="ssd"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;CMake Files\..\;CMake Files\..\..\;CMake Files\..\..\..\;CMake Files\..\..\..\..\;CMake Files\..\..\..\..\diy_install\;CMake Files\..\..\..\..\diy_install\opencv\;CMake Files\..\..\..\..\diy_install\opencv\share\;CMake Files\..\..\..\..\diy_install\opencv\share\OpenCV\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/home/framefreeze/Documents/learn/mxnet-ssd.cpp/build"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/home/framefreeze/Documents/learn/mxnet-ssd.cpp/build/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -f &quot;/home/framefreeze/Documents/learn/mxnet-ssd.cpp/build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/home/framefreeze/Documents/learn/mxnet-ssd.cpp/build/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/home/framefreeze/Documents/learn/mxnet-ssd.cpp/build/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/home/framefreeze/Documents/learn/mxnet-ssd.cpp/build"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/home/framefreeze/Documents/learn/mxnet-ssd.cpp/build/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -f &quot;/home/framefreeze/Documents/learn/mxnet-ssd.cpp/build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/home/framefreeze/Documents/learn/mxnet-ssd.cpp/build/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/home/framefreeze/Documents/learn/mxnet-ssd.cpp/build/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="/home/framefreeze/Documents/learn/mxnet-ssd.cpp/build"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/home/framefreeze/Documents/learn/mxnet-ssd.cpp/build/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -f &quot;/home/framefreeze/Documents/learn/mxnet-ssd.cpp/build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/home/framefreeze/Documents/learn/mxnet-ssd.cpp/build/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/home/framefreeze/Documents/learn/mxnet-ssd.cpp/build/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="ssd">
+				<Option output="/home/framefreeze/Documents/learn/mxnet-ssd.cpp/build/ssd" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/framefreeze/Documents/learn/mxnet-ssd.cpp/build"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/framefreeze/Documents/learn/mxnet-ssd.cpp/build/../include"/>
+					<Add directory="/home/framefreeze/diy_install/opencv/include"/>
+					<Add directory="/home/framefreeze/diy_install/opencv/include/opencv"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/home/framefreeze/Documents/learn/mxnet-ssd.cpp/build/Makefile&quot;  VERBOSE=1 ssd"/>
+					<CompileFile command="/usr/bin/make -f &quot;/home/framefreeze/Documents/learn/mxnet-ssd.cpp/build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/home/framefreeze/Documents/learn/mxnet-ssd.cpp/build/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/home/framefreeze/Documents/learn/mxnet-ssd.cpp/build/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="ssd/fast">
+				<Option output="/home/framefreeze/Documents/learn/mxnet-ssd.cpp/build/ssd" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/framefreeze/Documents/learn/mxnet-ssd.cpp/build"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/framefreeze/Documents/learn/mxnet-ssd.cpp/build/../include"/>
+					<Add directory="/home/framefreeze/diy_install/opencv/include"/>
+					<Add directory="/home/framefreeze/diy_install/opencv/include/opencv"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -f &quot;/home/framefreeze/Documents/learn/mxnet-ssd.cpp/build/Makefile&quot;  VERBOSE=1 ssd/fast"/>
+					<CompileFile command="/usr/bin/make -f &quot;/home/framefreeze/Documents/learn/mxnet-ssd.cpp/build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -f &quot;/home/framefreeze/Documents/learn/mxnet-ssd.cpp/build/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -f &quot;/home/framefreeze/Documents/learn/mxnet-ssd.cpp/build/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/home/framefreeze/Documents/learn/mxnet-ssd.cpp/src/detector.cpp">
+			<Option target="ssd"/>
+		</Unit>
+		<Unit filename="/home/framefreeze/Documents/learn/mxnet-ssd.cpp/src/main.cpp">
+			<Option target="ssd"/>
+		</Unit>
+		<Unit filename="/home/framefreeze/Documents/learn/mxnet-ssd.cpp/src/zupply.cpp">
+			<Option target="ssd"/>
+		</Unit>
+		<Unit filename="/home/framefreeze/Documents/learn/mxnet-ssd.cpp/build/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+		<Unit filename="/home/framefreeze/Documents/learn/mxnet-ssd.cpp/build/../../../../diy_install/opencv/share/OpenCV/OpenCVConfig-version.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\diy_install\opencv\share\OpenCV\"/>
+		</Unit>
+		<Unit filename="/home/framefreeze/Documents/learn/mxnet-ssd.cpp/build/../../../../diy_install/opencv/share/OpenCV/OpenCVConfig.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\diy_install\opencv\share\OpenCV\"/>
+		</Unit>
+		<Unit filename="/home/framefreeze/Documents/learn/mxnet-ssd.cpp/build/../../../../diy_install/opencv/share/OpenCV/OpenCVModules.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\diy_install\opencv\share\OpenCV\"/>
+		</Unit>
+		<Unit filename="/home/framefreeze/Documents/learn/mxnet-ssd.cpp/build/../../../../diy_install/opencv/share/OpenCV/OpenCVModules-release.cmake">
+			<Option virtualFolder="CMake Files\..\..\..\..\diy_install\opencv\share\OpenCV\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>
