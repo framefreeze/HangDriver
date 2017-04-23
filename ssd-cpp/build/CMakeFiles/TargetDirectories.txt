@@ -1,3 +1,0 @@
-/home/framefreeze/Documents/learn/mxnet-ssd.cpp/build/CMakeFiles/edit_cache.dir
-/home/framefreeze/Documents/learn/mxnet-ssd.cpp/build/CMakeFiles/rebuild_cache.dir
-/home/framefreeze/Documents/learn/mxnet-ssd.cpp/build/CMakeFiles/ssd.dir
