@@ -10,6 +10,8 @@
 #include <QImage>
 
 #include <opencv2/opencv.hpp>
+#include "detect_display.h"
+
 using namespace cv;
 
 namespace Ui {
@@ -27,13 +29,17 @@ public:
 public slots:
     void open_cam();
     void updata_img();
+    void change2safe_mode();
 
 private:
+    bool safe_mode;
     Ui::MainWindow *ui;
     QTimer cam_timer;
     VideoCapture camera;
     Mat frame, fgps;
     QImage display, fgps_q;
+    detect_display detector;
+    std::vector<float> dets;
 
     QImage mat2QImage(Mat img);
 

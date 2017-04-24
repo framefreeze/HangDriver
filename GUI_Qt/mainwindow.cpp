@@ -13,6 +13,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     connect(ui->open_but, SIGNAL(clicked()), this, SLOT(open_cam()));
+    connect(ui->safe_det, SIGNAL(clicked()), this, SLOT(change2safe_mode()));
     connect(&cam_timer, &QTimer::timeout, this, &MainWindow::updata_img);
 
     fgps = imread(filename);
@@ -24,6 +25,8 @@ MainWindow::MainWindow(QWidget *parent) :
         ui->fgps_show->setPixmap(QPixmap::fromImage(fgps_q).scaled(ui->fgps_show->size()));
         //this->update();
     }
+
+    safe_mode = false;
 }
 
 MainWindow::~MainWindow()
@@ -34,8 +37,8 @@ MainWindow::~MainWindow()
 
 void MainWindow::open_cam(){
     camera.open(1); // open camera
-    camera.set(CV_CAP_PROP_FRAME_WIDTH, 1280);
-    camera.set(CV_CAP_PROP_FRAME_HEIGHT, 720);
+    camera.set(CV_CAP_PROP_FRAME_WIDTH, 640);
+    camera.set(CV_CAP_PROP_FRAME_HEIGHT, 480);
     if(camera.isOpened()){
         cam_timer.start(10);
     }
@@ -46,12 +49,27 @@ void MainWindow::updata_img(){
     if(frame.data){
         cvtColor(frame, frame, COLOR_BGR2RGB);
 //        display = QImage((uchar*)(frame.data), frame.cols, frame.rows, frame.cols*frame.channels(),QImage::Format_RGB888);
+        if(safe_mode){
+            dets = detector.detect(frame);
+
+            if (dets.empty()) {
+                std::cout << "No detections found." << std::endl;
+                imshow("display", frame);
+            }
+            else {
+                // visualize detections
+                detector.show_result(frame, frame, dets, 0.75);
+            }
+        }
         display = mat2QImage(frame);
         ui->QImage_dis->setPixmap(QPixmap::fromImage(display).scaled(ui->QImage_dis->size()));
         this->update();
     }
 }
 
+void MainWindow::change2safe_mode(){
+    safe_mode = !safe_mode;
+}
 QImage MainWindow::mat2QImage(Mat img){
     return QImage((uchar*)(img.data), img.cols, img.rows,img.cols*img.channels(),QImage::Format_RGB888);
 }
