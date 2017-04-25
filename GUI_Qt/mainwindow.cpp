@@ -5,7 +5,8 @@
 using namespace cv;
 
 // bob ubuntu
-char filename[300] = "/home/framefreeze/Documents/HangDriver/GUI_Qt/data/fgps2.png";
+char fgps_file[300] = "/home/framefreeze/Documents/HangDriver/GUI_Qt/data/fgps2.png";
+char mark[200] = "/home/framefreeze/Documents/HangDriver/GUI_Qt/data/pentagram.png";
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -15,8 +16,9 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->open_but, SIGNAL(clicked()), this, SLOT(open_cam()));
     connect(ui->safe_det, SIGNAL(clicked()), this, SLOT(change2safe_mode()));
     connect(&cam_timer, &QTimer::timeout, this, &MainWindow::updata_img);
+    connect(ui->dst_set, SIGNAL(clicked()), this, SLOT(set_dst_pos()));
 
-    fgps = imread(filename);
+    fgps = imread(fgps_file);
     if(fgps.data){
         cvtColor(fgps, fgps, COLOR_BGR2RGB);
 
@@ -27,6 +29,7 @@ MainWindow::MainWindow(QWidget *parent) :
     }
 
     safe_mode = false;
+    dst_pos = 30;
 }
 
 MainWindow::~MainWindow()
@@ -36,7 +39,7 @@ MainWindow::~MainWindow()
 }
 
 void MainWindow::open_cam(){
-    camera.open(1); // open camera
+    camera.open(0); // open camera
     camera.set(CV_CAP_PROP_FRAME_WIDTH, 640);
     camera.set(CV_CAP_PROP_FRAME_HEIGHT, 480);
     if(camera.isOpened()){
@@ -70,6 +73,14 @@ void MainWindow::updata_img(){
 void MainWindow::change2safe_mode(){
     safe_mode = !safe_mode;
 }
+
+void MainWindow::set_dst_pos() {
+    ui->dst_pos->setText("test");
+    Mat dst_mark = imread(mark);
+    cvtColor(fgps, fgps, COLOR_BGR2RGB);
+
+}
+
 QImage MainWindow::mat2QImage(Mat img){
     return QImage((uchar*)(img.data), img.cols, img.rows,img.cols*img.channels(),QImage::Format_RGB888);
 }

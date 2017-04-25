@@ -30,6 +30,7 @@ public slots:
     void open_cam();
     void updata_img();
     void change2safe_mode();
+    void set_dst_pos();
 
 private:
     bool safe_mode;
@@ -40,6 +41,7 @@ private:
     QImage display, fgps_q;
     detect_display detector;
     std::vector<float> dets;
+    int dst_pos;
 
     QImage mat2QImage(Mat img);
 

@@ -172,6 +172,8 @@ void detect_display::show_result(cv::Mat src, cv::Mat &dst, std::vector<float> &
     dst = src.clone();
     int width = src.cols;
     int height = src.rows;
+    int baseline, bx, by;
+    Mat roi, box;
 
 
     // id, score, xmin, ymin, xmax, ymax
@@ -188,9 +190,20 @@ void detect_display::show_result(cv::Mat src, cv::Mat &dst, std::vector<float> &
 
         rectangle(dst, cv::Point2f(xmin,ymin), cv::Point2f(xmax, ymax), colors[id], 5);
 
-        std::string display_str = format("Type: %s, rate: %lf", class_names[id].c_str(), score);
+//        std::string display_str = format("Type: %s, rate: %lf", class_names[id].c_str(), score);
+        std::string display_str = format("%s %.3lf", class_names[id].c_str(), score);
+        Size textSize = getTextSize(display_str, 0, 1, 1, &baseline);
 
-        putText(dst, display_str, Point2f(xmin, ymin - 10), 0, 0.5, colors[id], 1);
+//        // draw the box
+        bx = (xmin + textSize.width) > width ? (width-xmin-1) : textSize.width ;
+        by = (10 + ymin + textSize.height) > height ? (height-ymin-1) : (10 + textSize.height);
+        Rect text_box(xmin, ymin, bx, by);
+        roi = dst(text_box);
+        box = roi.clone();
+        rectangle(box, Rect(0, 0, box.cols, box.rows), colors[id], -1);
+        addWeighted(roi, 0.5, box, 0.5, 1, roi);
+
+        putText(dst, display_str, Point2f(xmin, ymin+textSize.height), 0, 1, Scalar(255,255,255), 1, LINE_4);
 //        std::cout << "type is: " << class_names[id] << " " << id << " rasto is: " << score << " fps: " << fps << std::endl;
     }
     putText(dst, format("fps: %.0lf", fps), Point2f(0, 30), 0, 1, Scalar(0,0,0),2);
