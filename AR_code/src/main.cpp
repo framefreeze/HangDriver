@@ -19,12 +19,7 @@
 ////////////////////////////////////////////////////////////////////
 // Standard includes:
 #include <opencv2/opencv.hpp>
-<<<<<<< HEAD
-// #include <gl/gl.h>
-// #include <gl/glu.h>
-#include <gl.h>
-#include <glu.h>
-=======
+
 
 
 #if APPLE
@@ -35,7 +30,7 @@
     #include <GL/glu.h>
 
 #endif
->>>>>>> Dev
+
 
 /**
  * Processes a recorded video or live view from web-camera and allows you to adjust homography refinement and 
@@ -56,13 +51,37 @@ void processSingleImage(const cv::Mat& patternImage, CameraCalibration& calibrat
  * Returns true if processing loop should be stopped; otherwise - false.
  */
 bool processFrame(const cv::Mat& cameraFrame, ARPipeline& pipeline, ARDrawingContext& drawingCtx);
-
+Transformation pose3d;
 int main(int argc, const char * argv[])
 {
     // Change this calibration to yours:
     CameraCalibration calibration2(1040.4711914092852f, 1042.1274843132999f, 542.12340728399488f, 362.22154256297267f);
-    CameraCalibration calibration(9.9423918882311898e+02, 9.9423918882311898e+02, 6.0137200957740095e+02, 3.3964666038906381e+02);
+//    CameraCalibration calibration(9.9423918882311898e+02, 9.9423918882311898e+02,  6.0137200957740095e+02, 3.3964666038906381e+02);
+    CameraCalibration calibration(1.0227712011509490e+03, 1.0227712011509490e+03, 6.4474160636291322e+02, 3.6850818576406732e+02);
 //    CameraCalibration calibration(1089.6576034546229f, 1089.6576034546229f, 666.40552914383454f, 352.70296505848034f);
+
+   /*
+    * fuck
+    */
+
+    pose3d.r().mat[0][0]=0.99975646;
+    pose3d.r().mat[1][0]=0.013274947;
+    pose3d.r().mat[2][0]=-0.017630726;
+    pose3d.r().mat[0][1]=-0.019764567;
+    pose3d.r().mat[1][1]=0.18309471;
+    pose3d.r().mat[2][1]=-0.98289657;
+    pose3d.r().mat[0][2]=-0.0098198075;
+    pose3d.r().mat[1][2]=0.98300564;
+    pose3d.r().mat[2][2]=0.18331249;
+
+
+    pose3d.t().data[0]=-0.073232695;
+    pose3d.t().data[1]=0.74967629;
+    pose3d.t().data[2]=3.7285576;
+
+    pose3d.getInverted();
+
+
     if (argc < 2)
     {
         std::cout << "Input image not specified" << std::endl;
@@ -179,9 +198,11 @@ bool processFrame(const cv::Mat& cameraFrame, ARPipeline& pipeline, ARDrawingCon
 
     // Find a pattern and update it's detection status:
     drawingCtx.isPatternPresent = pipeline.processFrame(cameraFrame);
+//    drawingCtx.isPatternPresent = true;
 
     // Update a pattern pose:
-    drawingCtx.patternPose = pipeline.getPatternLocation();
+//    drawingCtx.patternPose = pipeline.getPatternLocation();
+    drawingCtx.patternPose = pose3d;
 
     // Request redraw of the window:
     drawingCtx.updateWindow();

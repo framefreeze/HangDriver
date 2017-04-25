@@ -1,10 +1,29 @@
 //
-// Created by Kevin_Feng on 2017/3/1.
+// Created by 王浩强 on 17/3/16.
 //
 
-#include "ARDrawingContext.h"
+/*****************************************************************************
+*   Markerless AR desktop application.
+******************************************************************************
+*   by Khvedchenia Ievgen, 5th Dec 2012
+*   http://computer-vision-talks.com
+******************************************************************************
+*   Ch3 of the book "Mastering OpenCV with Practical Computer Vision Projects"
+*   Copyright Packt Publishing 2012.
+*   http://www.packtpub.com/cool-projects-with-opencv/book
+*****************************************************************************/
+
+////////////////////////////////////////////////////////////////////
+// File includes:
+#include "ARDrawingContext.hpp"
+
+////////////////////////////////////////////////////////////////////
+// Standard includes:
+// #include <gl/gl.h>
+// #include <gl/glu.h>
 #include <gl.h>
 #include <glu.h>
+#include <cmath>
 void ARDrawingContextDrawCallback(void* param)
 {
     ARDrawingContext * ctx = static_cast<ARDrawingContext*>(param);
@@ -14,8 +33,9 @@ void ARDrawingContextDrawCallback(void* param)
     }
 }
 
-ARDrawingContext::ARDrawingContext(std::string windowName, cv::Size frameSize)
+ARDrawingContext::ARDrawingContext(std::string windowName, cv::Size frameSize, const CameraCalibration& c)
         : m_isTextureInitialized(false)
+        , m_calibration(c)
         , m_windowName(windowName)
 {
     // Create window with OpenGL support
@@ -140,7 +160,7 @@ void ARDrawingContext::buildProjectionMatrix(const CameraCalibration& calibratio
     float nearPlane = 0.01f;  // Near clipping distance
     float farPlane  = 100.0f;  // Far clipping distance
 
-    // Camera parameters
+    // Camera parametersIm
     float f_x = calibration.fx(); // Focal length in x axis
     float f_y = calibration.fy(); // Focal length in y axis (usually the same?)
     float c_x = calibration.cx(); // Camera primary point x
@@ -267,12 +287,52 @@ void ARDrawingContext::drawCubeModel() {
 //  glVertex3f(-1.0f,  1.0f,  1.0f);  // Point 3 (Left)
 //  glVertex3f(-1.0f,  1.0f, -1.0f);  // Point 4 (Left)
     /*改进箭头*/
-    float ax[10]={1,1,1.1,1.11,1.12,1.14,1.2,1.4,1.7,2};
-    float ay[10]={1,2,3,4,5,6,7,8,9,10};
-    float bx[10]={-1,-1,-0.9,-0.89,-0.88,-0.86,-0.8,-0.6,-0.3,0};
-    float by[10]={1,2,3,4.5,6,7.5,9.5,11,13,16};
-    for(int i=0;i<10;i++){
-        drawArrow(ax[i],ay[i],bx[i],by[i]);
+
+//  float ax[10]={1,1,1.1,1.,1.12,1.14,1.2,1.4,1.7,3};
+//  float ay[10]={1,2,3,4,5,6,7,8,9,10};
+//  float bx[10]={-1,-1,-0.9,-0.89,-0.88,-0.86,-0.8,-0.6,-0.3,-1};
+//  float by[10]={1,2,3,4.5,6,7.5,9.5,11,13,16};
+
+    /* int j for test*/
+
+    //int j = 5;
+
+    float ax[6][5]={
+//                    {1,1,1,1,1},
+            {1,1,1,1,1},
+            {1,1.2,1.4,1.7,2.1},
+            {1,0.875,0.5,0.2,-0.4},
+            {1,1.05,1.1,1.4,1.8},
+            {1,0.96,0.92,0.85,0.7},
+            {1,0.0,0.5,0.0,-0.5}};
+    float ay[6][5]={
+//                    {1,2,3,4,5},
+            {-5,-3,-1,1,3},
+            {-4,-2,0,1.8,3.2},
+//                  {1,1.8,2.6,3.5,4},
+            {-3,-2.2,-1.4,-0.5,0},
+            {-4,-3.5,-2.7,-2.5,-2},
+            {1,2.1,3.2,4.3,5.4},
+            {1,0.0,1.9,0.0,2.5}};
+    float bx[6][5]={
+//                    {-1,-1,-1,-1,-1},
+            {-1,-1,-1,-1,-1},
+            {-1,-0.8,-0.6,-0.1,0.5},
+            {-1,-1.075,-1.1,-1.3,-1.4},
+            {-1,-0.4,0.4,1.2,1.8},
+            {-1,-1.04,-1.08,-1.13,-1.3},
+            {-1,0.0,-1.05,0.0,-1.2}};
+    float by[6][5]={
+//                    {1,2,3,4,5},
+            {-5,-3,-1,1,3},
+            {-4,-1.6,1,3.0,4.8},
+//                  {1,1.55,2.2,2.6,3},
+            {-3,-2.45,-1.8,-1.4,-1},
+            {-4,-1.6,0,1.6,2},
+            {1,1.9,2.8,3.6,4.6},
+            {1,0.0,1.4,0.0,2}};
+    for(int i=0;i<5;i++){
+        drawArrow(ax[this->turn][i],ay[this->turn][i],bx[this->turn][i],by[this->turn][i],this->turn);
     }
 //  for (int i = 0; i < 10; i++) {
 //    glBegin(GL_POLYGON);
@@ -329,25 +389,57 @@ void ARDrawingContext::drawCubeModel() {
 
     glPopAttrib();
 }
-void ARDrawingContext::drawArrow(float ax,float ay,float bx,float by){
-    glBegin(GL_POLYGON);
-    float mx = (ax+bx)/2;
-    float my=(ay+by)/2;
-    float ky=sqrt((ax-bx)*(ax-bx)/((ax-bx)*(ax-bx)+(ay-by)*(ay-by)));
-    float kx=sqrt((ay-by)*(ay-by)/((ax-bx)*(ax-bx)+(ay-by)*(ay-by)));
-    printf("mx: %f\nmy: %f\n:ky: %f\nkx: %f",mx,my,ky,kx);
+void ARDrawingContext::drawArrow(float ax,float ay,float bx,float by,int turn){
+    if(ax!=0.0f||ay!=0.0f||bx!=0.0f||by!=0.0f){
+        glBegin(GL_POLYGON);
+        float mx = (ax+bx)/2;
+        float my=(ay+by)/2;
+        float ky=sqrt((ax-bx)*(ax-bx)/((ax-bx)*(ax-bx)+(ay-by)*(ay-by)));
+        float kx=sqrt((ay-by)*(ay-by)/((ax-bx)*(ax-bx)+(ay-by)*(ay-by)));
+        if(ay>by){
+            kx=-kx;
+        }
+//        float x[6][6]={{0.5,-0.5,-1.0,1.0,1.0,0.5},
+//                       {0.5,-0.5,-1.0,1.0,1.0,0.5},
+//                       {0.25,-0.25,-0.5,0.5,0.5,0.25},
+//                       {0.25,-0.25,-0.5,0.5,0.5,0.25},
+//                       {0.5,-0.5,-1.0,1.0,1.0,0.5},
+//                       {0.25,-0.25,-0.5,0.5,0.5,0.25}};
+//        float y[6][6]={{0.5,0.5,1.0,1.0,-1.0,-0.5},
+//                       {0.5,0.5,1.0,1.0,-1.0,-0.5},
+//                       {0.25,0.25,0.5,0.5,-0.5,-0.25},
+//                       {0.25,0.25,0.5,0.5,-0.5,-0.25},
+//                       {0.5,0.5,1.0,1.0,-1.0,-0.5},
+//                       {0.25,0.25,0.5,0.5,-0.5,-0.25}};
+        float x[6][6]={{0.5,-0.5,-1.0,1.0,1.0,0.5},
+                       {0.5,-0.5,-1.0,1.0,1.0,0.5},
+                       {0.25,-0.25,-0.5,0.5,0.5,0.25},
+                       {0.5,-0.5,-1,1,1,0.5},
+                       {0.5,-0.5,-1.0,1.0,1.0,0.5},
+                       {0.25,-0.25,-0.5,0.5,0.5,0.25}};
+        float y[6][6]={{0.5,-0.5,-1.0,1.0,1.0,0.5},
+                       {0.5,0.5,1.0,1.0,-1.0,-0.5},
+                       {0.25,0.25,0.5,0.5,-0.5,-0.25},
+                       {0.5,0.5,1,1,-1,-0.5},
+                       {0.5,0.5,1.0,1.0,-1.0,-0.5},
+                       {0.25,0.25,0.5,0.5,-0.5,-0.25}};
+//  printf("mx: %f\nmy: %f\n:ky: %f\nkx: %f",mx,my,ky,kx);
 //  glNormal3f(0.0f,1.0f,0.0f);
-    glVertex3f(mx+0.5f*kx,my+0.5f*ky, 0.0f);
-    glNormal3f(0.0f, 1.0f, 0.0f);//放在第一个下面有奇效
-    glVertex3f(mx-0.5f*ky,my+0.5f*kx, 0.0f);
-    glVertex3f(mx-1.0f*ky,my+1.0f*kx, 0.0f);
-    glVertex3f(mx+1.0f*kx,my+1.0f*ky, 0.0f);
-    glVertex3f(mx+1.0f*ky,my-1.0f*kx, 0.0f);
-    glVertex3f(mx+0.5f*ky,my-0.5f*kx, 0.0f);
+        glVertex3f(mx+x[turn][0]*kx,my+y[turn][0]*ky, 0.0f);
+        glNormal3f(0.0f, 1.0f, 0.0f);//放在第一个下面有奇效
+        glVertex3f(mx+x[turn][1]*ky,my+y[turn][1]*kx, 0.0f);
+        glVertex3f(mx+x[turn][2]*ky,my+y[turn][2]*kx, 0.0f);
+        glVertex3f(mx+x[turn][3]*kx,my+y[turn][3]*ky, 0.0f);
+        glVertex3f(mx+x[turn][4]*ky,my+y[turn][4]*kx, 0.0f);
+        glVertex3f(mx+x[turn][5]*ky,my+y[turn][5]*kx, 0.0f);
 //    glVertex3f(-0.5f, 0.0f, 0.0f);
 //    glVertex3f(-1.0f, 0.0f, 0.0f);
 //    glVertex3f(0.0f, 1.0f, 0.0f);
 //    glVertex3f(1.0f, 0.0f, 0.0f);
 //    glVertex3f(0.5f, 0.0f, 0.0f);
-    glEnd();
+        glEnd();
+    }
+}
+void ARDrawingContext::setTurn() {
+    this->turn = 3;
 }
