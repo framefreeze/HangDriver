@@ -5,6 +5,8 @@
 #ifndef SSD_CPP_CLASS_BACK_DETECTION_H
 #define SSD_CPP_CLASS_BACK_DETECTION_H
 #include <opencv2/opencv.hpp>
+#include <opencv2/cudalegacy.hpp>
+//#include <cuda_runtime.h>
 using namespace cv;
 
 class back_detection {
@@ -31,6 +33,7 @@ public:
     void detection_cuda(Mat& frame, Point2f& center, float& radius );
     void detection(Mat& frame, Point2f& center, float& radius );
     void change_pos(Point2f center);
+    int get_pos();
 };
 
 

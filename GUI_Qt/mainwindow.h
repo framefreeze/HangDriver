@@ -29,7 +29,7 @@ public:
 public slots:
     void open_cam();
     void cam_updata_img();
-    void fpgs_updata_img();
+    void fgps_updata_img();
     void change2safe_mode();
     void set_dst_pos();
 
@@ -43,6 +43,7 @@ private:
     QImage display, fgps_q;
     detect_display detector;
     std::vector<float> dets;
+    back_detection gps_detector;
     int dst_pos;
 
     QImage mat2QImage(Mat img);

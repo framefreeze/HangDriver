@@ -6,6 +6,7 @@
 #define SSD_CPP_CLASS_DETECT_DISPLAY_H
 
 #include "mxnet/c_predict_api.h"
+#include "back_detection.h"
 #include "opencv2/opencv.hpp"
 #include <string>
 #include <vector>
@@ -28,6 +29,7 @@ private:
             "motorbike", "person", "pottedplant",
             "sheep", "sofa", "train", "tvmonitor"};
     std::vector<cv::Scalar> colors;
+
 
 public:
     detect_display(int width=300, int height=300,

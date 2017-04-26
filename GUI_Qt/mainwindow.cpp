@@ -1,7 +1,8 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "opencv2/opencv.hpp"
-#define APPLE 1
+//#define APPLE 0
+#define Debug 1
 using namespace cv;
 
 Ptr<BackgroundSubtractor> mog_cuda = cuda::createBackgroundSubtractorMOG2();
@@ -53,10 +54,6 @@ void MainWindow::open_cam(){
         cam_timer.start(13);
     }
 
-    gps_cam.open(1); //open fgps camera
-    if(gps_cam.isOpened()){
-        fpgs_timer.start(33);
-    }
 }
 
 void MainWindow::cam_updata_img() {
@@ -86,6 +83,15 @@ void MainWindow::fgps_updata_img() {
     gps_cam >> gps_frame;
     gps_frame = gps_frame(Rect(70,0,frame.cols-70,frame.rows));
     rotate(gps_frame, gps_frame, ROTATE_90_COUNTERCLOCKWISE);
+    Point2f center;
+    float r;
+    gps_detector.detection(gps_frame, center, r);
+
+#ifdef Debug
+    imshow("fgps", gps_frame);
+    std::cout << gps_detector.get_pos() << std::endl;
+//    waitKey();
+#endif
 
 }
 
@@ -98,6 +104,13 @@ void MainWindow::set_dst_pos() {
     Mat dst_mark = imread(mark);
     cvtColor(fgps, fgps, COLOR_BGR2RGB);
 
+    gps_cam.open(1); //open fgps camera
+    if(gps_cam.isOpened()){
+        fgps_timer.start(13);
+    }
+    else{
+        std::cout << "output error" << std::endl;
+    }
 }
 
 QImage MainWindow::mat2QImage(Mat img) {

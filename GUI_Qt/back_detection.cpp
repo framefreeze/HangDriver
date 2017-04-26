@@ -5,6 +5,10 @@
 #include "back_detection.h"
 using namespace std;
 
+back_detection::back_detection(){
+    pos_now = 0;
+}
+
 void back_detection::detection(Mat &frame, Point2f &center, float &radius) {
     center = Point2f(0,0);
     radius = 0;
@@ -61,6 +65,8 @@ void back_detection::detection_cuda(Mat &frame, Point2f &center, float &radius) 
             break;
         }
     }
+
+    change_pos(center);
     cuda_fgmask.release();
     cuda_frame.release();
 }
@@ -78,4 +84,8 @@ void back_detection::change_pos(Point2f center) {
     if(pos != 0){
         pos_now = pos+1;
     }
+}
+
+int back_detection::get_pos() {
+    return pos_now;
 }

@@ -1,7 +1,7 @@
 //
 // Created by 王浩强 on 17/4/23.
 //
-#define APPLE 1
+//#define APPLE 0
 #include "detect_display.h"
 #include <chrono>
 
