@@ -1,7 +1,7 @@
 //
 // Created by 王浩强 on 17/4/23.
 //
-
+#define APPLE 1
 #include "detect_display.h"
 #include <chrono>
 
@@ -54,11 +54,7 @@ public :
 void detect_display::GetMeanFile(cv::Mat image_mat, mx_float* image_data,
                  const int channels, const cv::Size resize_size)
 {
-    // Read all kinds of file into a BGR color 3 channels image
-//    cv::Mat im_ori = cv::imread(image_file, 1);
-
     cv::Mat im;
-
     cv::resize(image_mat, im, resize_size);
 
     int size = im.rows * im.cols * channels;
@@ -100,14 +96,21 @@ detect_display::detect_display(int width, int height, float mean_r, float mean_g
     mean_g_ = mean_g;
     mean_b_ = mean_b;
 
+#ifdef APPLE
+    std::string json_file = "/Users/DavidWang/Documents/learn/mxnet-ssd/model/deploy_ssd_300-symbol.json";
+    std::string param_file = "/Users/DavidWang/Documents/learn/mxnet-ssd/model/deploy_ssd_300-0000.params";
+#else
     std::string json_file = "/home/framefreeze/Documents/HangDriver/GUI_Qt/data/deploy_ssd_300-symbol.json";
     std::string param_file = "/home/framefreeze/Documents/HangDriver/GUI_Qt/data/deploy_ssd_300-0001.params";
-//    std::string synset_file = "/Users/DavidWang/Documents/learn/mxnet-ssd/mxnet/example/image-classification/predict-cpp/model/Inception/synset.txt";
-//    std::string nd_file = "/Users/DavidWang/Documents/learn/mxnet-ssd/mxnet/example/image-classification/predict-cpp/model/Inception/mean_224.nd";
+#endif
 
     BufferFile json_data(json_file);
     BufferFile param_data(param_file);
 
+
+#ifdef APPLE
+    device_type = 1;
+#endif
 
     // Create Predictor
     MXPredCreate((const char*)json_data.GetBuffer(),
@@ -194,7 +197,7 @@ void detect_display::show_result(cv::Mat src, cv::Mat &dst, std::vector<float> &
         std::string display_str = format("%s %.3lf", class_names[id].c_str(), score);
         Size textSize = getTextSize(display_str, 0, 1, 1, &baseline);
 
-//        // draw the box
+        // draw the box
         bx = (xmin + textSize.width) > width ? (width-xmin-1) : textSize.width ;
         by = (10 + ymin + textSize.height) > height ? (height-ymin-1) : (10 + textSize.height);
         Rect text_box(xmin, ymin, bx, by);

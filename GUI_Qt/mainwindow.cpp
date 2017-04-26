@@ -1,12 +1,19 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "opencv2/opencv.hpp"
-
+#define APPLE 1
 using namespace cv;
 
-// bob ubuntu
+Ptr<BackgroundSubtractor> mog_cuda = cuda::createBackgroundSubtractorMOG2();
+Ptr<BackgroundSubtractor> mog = createBackgroundSubtractorMOG2();
+
+#ifdef APPLE
+char fgps_file[300] = "/Users/DavidWang/Documents/learn/whq/HangDriver/GUI_Qt/data/fgps.png";
+char mark[200] = "/Users/DavidWang/Documents/learn/whq/HangDriver/GUI/pentagram.png";
+#else
 char fgps_file[300] = "/home/framefreeze/Documents/HangDriver/GUI_Qt/data/fgps2.png";
 char mark[200] = "/home/framefreeze/Documents/HangDriver/GUI_Qt/data/pentagram.png";
+#endif
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -15,14 +22,13 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     connect(ui->open_but, SIGNAL(clicked()), this, SLOT(open_cam()));
     connect(ui->safe_det, SIGNAL(clicked()), this, SLOT(change2safe_mode()));
-    connect(&cam_timer, &QTimer::timeout, this, &MainWindow::updata_img);
+    connect(&cam_timer, &QTimer::timeout, this, &MainWindow::cam_updata_img);
+    connect(&fgps_timer, &QTimer::timeout, this, &MainWindow::fgps_updata_img);
     connect(ui->dst_set, SIGNAL(clicked()), this, SLOT(set_dst_pos()));
 
     fgps = imread(fgps_file);
     if(fgps.data){
         cvtColor(fgps, fgps, COLOR_BGR2RGB);
-
-//        fgps_q = QImage((uchar*)(fgps.data), fgps.cols, fgps.rows, fgps.cols*fgps.channels(),QImage::Format_RGB888);
         fgps_q = mat2QImage(fgps);
         ui->fgps_show->setPixmap(QPixmap::fromImage(fgps_q).scaled(ui->fgps_show->size()));
         //this->update();
@@ -38,16 +44,22 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+// 开始导航程序
 void MainWindow::open_cam(){
     camera.open(0); // open camera
     camera.set(CV_CAP_PROP_FRAME_WIDTH, 640);
     camera.set(CV_CAP_PROP_FRAME_HEIGHT, 480);
     if(camera.isOpened()){
-        cam_timer.start(10);
+        cam_timer.start(13);
+    }
+
+    gps_cam.open(1); //open fgps camera
+    if(gps_cam.isOpened()){
+        fpgs_timer.start(33);
     }
 }
 
-void MainWindow::updata_img(){
+void MainWindow::cam_updata_img() {
     camera >> frame;
     if(frame.data){
         cvtColor(frame, frame, COLOR_BGR2RGB);
@@ -70,7 +82,14 @@ void MainWindow::updata_img(){
     }
 }
 
-void MainWindow::change2safe_mode(){
+void MainWindow::fgps_updata_img() {
+    gps_cam >> gps_frame;
+    gps_frame = gps_frame(Rect(70,0,frame.cols-70,frame.rows));
+    rotate(gps_frame, gps_frame, ROTATE_90_COUNTERCLOCKWISE);
+
+}
+
+void MainWindow::change2safe_mode() {
     safe_mode = !safe_mode;
 }
 
@@ -81,6 +100,6 @@ void MainWindow::set_dst_pos() {
 
 }
 
-QImage MainWindow::mat2QImage(Mat img){
+QImage MainWindow::mat2QImage(Mat img) {
     return QImage((uchar*)(img.data), img.cols, img.rows,img.cols*img.channels(),QImage::Format_RGB888);
 }

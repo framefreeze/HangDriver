@@ -28,16 +28,18 @@ public:
 
 public slots:
     void open_cam();
-    void updata_img();
+    void cam_updata_img();
+    void fpgs_updata_img();
     void change2safe_mode();
     void set_dst_pos();
 
 private:
     bool safe_mode;
     Ui::MainWindow *ui;
-    QTimer cam_timer;
+    QTimer cam_timer, fgps_timer;
     VideoCapture camera;
-    Mat frame, fgps;
+    VideoCapture gps_cam;
+    Mat frame, fgps, gps_frame;
     QImage display, fgps_q;
     detect_display detector;
     std::vector<float> dets;
